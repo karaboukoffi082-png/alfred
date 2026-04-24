@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DK-PRESS — Portail WiFi</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@
+    400;500;600;700;800&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            background: linear-gradient(135deg, #064e3b 0%, #111827 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 1rem;
+        }
+        .portal-card {
+            background: white;
+            border-radius: 1.5rem;
+            box-shadow: 0 25px 60px rgba(0,0,0,0.3);
+            width: 100%;
+            max-width: 420px;
+            overflow: hidden;
+        }
+        .portal-header {
+            background: #111827;
+            padding: 2rem 1.5rem;
+            text-align: center;
+        }
+        .portal-header .logo {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            margin-bottom: 0.75rem;
+        }
+        .portal-header .logo-box {
+            width: 2.5rem; height: 2.5rem;
+            background: white;
+            border-radius: 0.5rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .portal-header .logo-box span {
+            font-family: 'Outfit', sans-serif;
+            font-weight: 800;
+            font-size: 1.1rem;
+            color: #111827;
+        }
+        .portal-header .logo-text {
+            font-family: 'Outfit', sans-serif;
+            font-weight: 800;
+            font-size: 1.25rem;
+            color: white;
+        }
+        .portal-header h1 {
+            font-family: 'Outfit', sans-serif;
+            font-weight: 700;
+            font-size: 1.5rem;
+            color: white;
+            margin-bottom: 0.25rem;
+        }
+        .portal-header p {
+            color: #9CA3AF;
+            font-size: 0.875rem;
+        }
+        .portal-body { padding: 1.5rem; }
+        .form-group { margin-bottom: 1.25rem; }
+        .form-group label {
+            display: block;
+            font-size: 0.8rem;
+            font-weight: 600;
+            color: #374151;
+            margin-bottom: 0.5rem;
+        }
+        .form-group input, .form-group select {
+            width: 100%;
+            border: 1.5px solid #E5E7EB;
+            border-radius: 0.75rem;
+            padding: 0.75rem 1rem;
+            font-size: 0.875rem;
+            outline: none;
+            transition: all 0.2s;
+            font-family: inherit;
+        }
+        .form-group input:focus, .form-group select:focus {
+            border-color: #111827;
+            box-shadow: 0 0 0 3px rgba(17,24,39,0.1);
+        }
+        .submit-btn {
+            width: 100%;
+            background: #111827;
+            color: white;
+            padding: 0.875rem;
+            border: none;
+            border-radius: 0.75rem;
+            font-size: 0.95rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.2s;
+            font-family: inherit;
+        }
+        .submit-btn:hover { background: #1F2937; transform: scale(0.98); }
+        .submit-btn:active { transform: scale(0.96); }
+        .portal-footer {
+            padding: 1rem 1.5rem;
+            background: #F9FAFB;
+            text-align: center;
+            border-top: 1px solid #E5E7EB;
+        }
+        .portal-footer p { font-size: 0.75rem; color: #9CA3AF; }
+        .portal-footer a { color: #111827; font-weight: 600; text-decoration: none; }
+        .method-tabs {
+            display: flex;
+            border-radius: 0.75rem;
+            overflow: hidden;
+            border: 1.5px solid #E5E7EB;
+            margin-bottom: 1.25rem;
+        }
+        .method-tab {
+            flex: 1;
+            padding: 0.625rem;
+            text-align: center;
+            font-size: 0.8rem;
+            font-weight: 600;
+            cursor: pointer;
+            background: white;
+            color: #6B7280;
+            border: none;
+            transition: all 0.2s;
+            font-family: inherit;
+        }
+        .method-tab.active {
+            background: #111827;
+            color: white;
+        }
+        .status-msg {
+            padding: 0.75rem 1rem;
+            border-radius: 0.75rem;
+            font-size: 0.8rem;
+            margin-bottom: 1rem;
+            display: none;
+        }
+        .status-msg.success { display: block; background: #ECFDF5; color: #065F46; border: 1px solid #A7F3D0; }
+        .status-msg.error { display: block; background: #FEF2F2; color: #991B1B; border: 1px solid #FECACA; }
+        .status-msg.loading { display: block; background: #F3F4F6; color: #374151; border: 1px solid #E5E7EB; }
+    </style>
+</head>
+<body>
+    <div class="portal-card">
+        <div class="portal-header">
+            <div class="logo">
+                <div class="logo-box"><span>DK</span></div>
+                <span class="logo-text">DK-PRESS</span>
+            </div>
+            <h1>Connexion WiFi</h1>
+            <p>Connectez-vous au réseau DK-PRESS Internet</p>
+        </div>
+
+        <div class="portal-body">
+            <div id="statusMsg" class="status-msg"></div>
+
+            <!-- Onglets méthode -->
+            <div class="method-tabs">
+                <button class="method-tab active" onclick="switchMethod('ticket')" id="tabTicket">Code Ticket</button>
+                <button class="method-tab" onclick="switchMethod('login')" id="tabLogin">Connexion</button>
+            </div>
+
+            <!-- Formulaire ticket -->
+            <form id="ticketForm" onsubmit="submitTicket(event)">
+                <div class="form-group">
+                    <label>Numéro de téléphone</label>
+                    <input type="tel" id="phone" placeholder="90 89 98 14" required>
+                </div>
+                <div class="form-group">
+                    <label>Code ticket</label>
+                    <input type="text" id="ticketCode" placeholder="Entrez votre code" required>
+                </div>
+                <button type="submit" class="submit-btn">
+                    <i class="fas fa-wifi" style="margin-right:0.5rem"></i>Se connecter
+                </button>
+            </form>
+
+            <!-- Formulaire connexion compte -->
+            <form id="loginForm" style="display:none" onsubmit="submitLogin(event)">
+                <div class="form-group">
+                    <label>Nom d'utilisateur ou email</label>
+                    <input type="text" id="username" placeholder="votre@email.com" required>
+                </div>
+                <div class="form-group">
+                    <label>Mot de passe</label>
+                    <input type="password" id="password" placeholder="••••••••" required>
+                </div>
+                <button type="submit" class="submit-btn">
+                    <i class="fas fa-sign-in-alt" style="margin-right:0.5rem"></i>Se connecter
+                </button>
+            </form>
+        </div>
+
+        <div class="portal-footer">
+            <p>Pas de ticket ? <a href="https://dk-press.com/internet/acheter/">Acheter un ticket data</a></p>
+            <p style="margin-top:0.5rem">© 2025 DK-PRESS — Lomé, Togo</p>
+        </div>
+    </div>
+
+    <script>
+    function switchMethod(method) {
+        document.getElementById('tabTicket').classList.toggle('active', method === 'ticket');
+        document.getElementById('tabLogin').classList.toggle('active', method === 'login');
+        document.getElementById('ticketForm').style.display = method === 'ticket' ? '' : 'none';
+        document.getElementById('loginForm').style.display = method === 'login' ? '' : 'none';
+        hideStatus();
+    }
+
+    function showStatus(type, msg) {
+        const el = document.getElementById('statusMsg');
+        el.className = 'status-msg ' + type;
+        el.innerHTML = type === 'loading' ? '<i class="fas fa-spinner fa-spin" style="margin-right:0.5rem"></i>' + msg : msg;
+    }
+    function hideStatus() {
+        const el = document.getElementById('statusMsg');
+        el.className = 'status-msg';
+        el.style.display = 'none';
+    }
+
+    function submitTicket(e) {
+        e.preventDefault();
+        showStatus('loading', 'Vérification du ticket en cours...');
+        // Simulation — en production, appeler l'API backend
+        setTimeout(() => {
+            showStatus('success', '<i class="fas fa-check-circle" style="margin-right:0.5rem"></i>Connecté ! Redirection en cours...');
+        }, 2000);
+    }
+
+    function submitLogin(e) {
+        e.preventDefault();
+        showStatus('loading', 'Authentification...');
+        setTimeout(() => {
+            showStatus('success', '<i class="fas fa-check-circle" style="margin-right:0.5rem"></i>Connecté ! Redirection en cours...');
+        }, 2000);
+    }
+    </script>
+</body>
+</html>

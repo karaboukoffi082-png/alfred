@@ -1,0 +1,217 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load humanize %}
+{% block title %}Tableau de bord{% endblock %}
+
+{% block content %}
+<div class="max-w-7xl mx-auto px-4 py-8">
+    <!-- En-tête -->
+    <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-8">
+        <div>
+            <h1 class="text-2xl font-bold text-gray-900" style="font-family:'Outfit',sans-serif">
+                Bonjour, {{ user.first_name|default:user.username }} 👋
+            </h1>
+            <p class="text-sm text-gray-500 mt-1">Voici un aperçu de vos activités sur DK-PRESS.</p>
+        </div>
+        <div class="flex gap-2">
+            <a href="{% url 'shop:catalog' %}" class="inline-flex items-center gap-1.5 bg-green-600 text-white px-4 py-2 rounded-lg text-sm font-medium hover:bg-green-700 transition">
+                <i class="fas fa-shopping-bag text-xs"></i> Boutique
+            </a>
+            <a href="{% url 'chat:inbox' %}" class="inline-flex items-center gap-1.5 border border-gray-200 text-gray-700 px-4 py-2 rounded-lg text-sm font-medium hover:bg-gray-50 transition">
+                <i class="fas fa-comment-dots text-xs"></i> Support
+            </a>
+        </div>
+    </div>
+
+    <!-- Statistiques rapides -->
+    <div class="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
+        <div class="bg-white rounded-xl border border-gray-100 p-5">
+            <div class="flex items-center gap-3">
+                <div class="w-11 h-11 bg-green-50 rounded-lg flex items-center justify-center">
+                    <i class="fas fa-box text-green-600"></i>
+                </div>
+                <div>
+                    <p class="text-2xl font-bold text-gray-900" style="font-family:'Outfit',sans-serif">{{ recent_orders|length }}</p>
+                    <p class="text-xs text-gray-500">Commandes</p>
+                </div>
+            </div>
+        </div>
+        <div class="bg-white rounded-xl border border-gray-100 p-5">
+            <div class="flex items-center gap-3">
+                <div class="w-11 h-11 bg-blue-50 rounded-lg flex items-center justify-center">
+                    <i class="fas fa-shirt text-blue-600"></i>
+                </div>
+                <div>
+                    <p class="text-2xl font-bold text-gray-900" style="font-family:'Outfit',sans-serif">{{ recent_pressing|length }}</p>
+                    <p class="text-xs text-gray-500">Pressing</p>
+                </div>
+            </div>
+        </div>
+        <div class="bg-white rounded-xl border border-gray-100 p-5">
+            <div class="flex items-center gap-3">
+                <div class="w-11 h-11 bg-gray-100 rounded-lg flex items-center justify-center">
+                    <i class="fas fa-wifi text-gray-700"></i>
+                </div>
+                <div>
+                    <p class="text-2xl font-bold text-gray-900" style="font-family:'Outfit',sans-serif">{{ active_subscriptions|length }}</p>
+                    <p class="text-xs text-gray-500">Abonnements</p>
+                </div>
+            </div>
+        </div>
+        <div class="bg-white rounded-xl border border-gray-100 p-5">
+            <div class="flex items-center gap-3">
+                <div class="w-11 h-11 bg-amber-50 rounded-lg flex items-center justify-center">
+                    <i class="fas fa-bell text-amber-600"></i>
+                </div>
+                <div>
+                    <p class="text-2xl font-bold text-gray-900" style="font-family:'Outfit',sans-serif">{{ unread_notifications|length }}</p>
+                    <p class="text-xs text-gray-500">Notifications</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="grid lg:grid-cols-3 gap-6">
+        <!-- Commandes récentes -->
+        <div class="lg:col-span-2 bg-white rounded-xl border border-gray-100 overflow-hidden">
+            <div class="flex items-center justify-between px-6 py-4 border-b border-gray-100">
+                <h2 class="font-bold text-gray-900">Commandes récentes</h2>
+                <a href="{% url 'shop:order_history' %}" class="text-sm text-gray-500 hover:text-gray-900 transition">Voir tout</a>
+            </div>
+            {% if recent_orders %}
+            <div class="divide-y divide-gray-50">
+                {% for order in recent_orders %}
+                <div class="flex items-center gap-4 px-6 py-4 hover:bg-gray-50/50 transition">
+                    <div class="w-10 h-10 bg-green-50 rounded-lg flex items-center justify-center flex-shrink-0">
+                        <i class="fas fa-shopping-bag text-green-600 text-sm"></i>
+                    </div>
+                    <div class="flex-1 min-w-0">
+                        <p class="text-sm font-semibold text-gray-900">CMD-{{ order.order_number }}</p>
+                        <p class="text-xs text-gray-400">{{ order.created_at|date:"d/m/Y à H:i" }}</p>
+                    </div>
+                    <span class="text-sm font-bold text-gray-900">{{ order.total|intcomma }} FCFA</span>
+                    <span class="hidden sm:inline-flex px-2.5 py-1 rounded-full text-xs font-medium
+                        {% if order.status == 'delivered' %}bg-green-50 text-green-700
+                        {% elif order.status == 'cancelled' %}bg-red-50 text-red-700
+                        {% elif order.status == 'shipped' %}bg-blue-50 text-blue-700
+                        {% else %}bg-amber-50 text-amber-700{% endif %}">
+                        {{ order.get_status_display }}
+                    </span>
+                    <a href="{% url 'shop:order_tracking' order.order_number %}" class="text-gray-400 hover:text-gray-600 transition">
+                        <i class="fas fa-chevron-right text-xs"></i>
+                    </a>
+                </div>
+                {% endfor %}
+            </div>
+            {% else %}
+            <div class="p-12 text-center text-gray-400">
+                <i class="fas fa-box-open text-3xl mb-2"></i>
+                <p class="text-sm">Aucune commande pour le moment</p>
+                <a href="{% url 'shop:catalog' %}" class="text-sm font-semibold text-green-600 mt-2 inline-block">Commencer mes achats</a>
+            </div>
+            {% endif %}
+        </div>
+
+        <!-- Notifications récentes -->
+        <div class="bg-white rounded-xl border border-gray-100 overflow-hidden">
+            <div class="flex items-center justify-between px-6 py-4 border-b border-gray-100">
+                <h2 class="font-bold text-gray-900">Notifications</h2>
+                <a href="{% url 'notifications:list' %}" class="text-sm text-gray-500 hover:text-gray-900 transition">Tout voir</a>
+            </div>
+            {% if unread_notifications %}
+            <div class="divide-y divide-gray-50">
+                {% for notif in unread_notifications %}
+                <div class="px-6 py-3.5 hover:bg-gray-50/50 transition {% if not notif.is_read %}bg-green-50/30{% endif %}">
+                    <div class="flex items-start gap-3">
+                        <div class="w-8 h-8 bg-gray-100 rounded-full flex items-center justify-center flex-shrink-0 mt-0.5">
+                            {% if notif.type_notif == 'order' %}<i class="fas fa-box text-green-600 text-xs"></i>
+                            {% elif notif.type_notif == 'pressing' %}<i class="fas fa-shirt text-blue-600 text-xs"></i>
+                            {% elif notif.type_notif == 'fai' %}<i class="fas fa-wifi text-gray-600 text-xs"></i>
+                            {% elif notif.type_notif == 'chat' %}<i class="fas fa-comment text-amber-600 text-xs"></i>
+                            {% else %}<i class="fas fa-bell text-gray-500 text-xs"></i>{% endif %}
+                        </div>
+                        <div class="min-w-0">
+                            <p class="text-sm font-medium text-gray-900 truncate">{{ notif.title }}</p>
+                            <p class="text-xs text-gray-400 mt-0.5">{{ notif.created_at|timesince }}</p>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+            {% else %}
+            <div class="p-8 text-center text-gray-400">
+                <i class="fas fa-bell-slash text-2xl mb-2"></i>
+                <p class="text-sm">Aucune notification</p>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+
+    <!-- Abonnements Internet & Pressing -->
+    <div class="grid lg:grid-cols-2 gap-6 mt-6">
+        <!-- Abonnements Internet -->
+        <div class="bg-white rounded-xl border border-gray-100 overflow-hidden">
+            <div class="flex items-center justify-between px-6 py-4 border-b border-gray-100">
+                <h2 class="font-bold text-gray-900"><i class="fas fa-wifi text-gray-400 mr-2"></i>Abonnements Internet</h2>
+                <a href="{% url 'fai:my_subscriptions' %}" class="text-sm text-gray-500 hover:text-gray-900 transition">Voir tout</a>
+            </div>
+            {% if active_subscriptions %}
+            <div class="divide-y divide-gray-50">
+                {% for sub in active_subscriptions %}
+                <div class="px-6 py-4 flex items-center gap-4">
+                    <div class="w-10 h-10 bg-gray-100 rounded-lg flex items-center justify-center">
+                        <i class="fas fa-wifi text-gray-700"></i>
+                    </div>
+                    <div class="flex-1">
+                        <p class="text-sm font-semibold text-gray-900">{{ sub.offer.name }}</p>
+                        <p class="text-xs text-gray-400">{{ sub.foyer.name }} — Expire le {{ sub.expires_at|date:"d/m/Y" }}</p>
+                    </div>
+                    <span class="bg-green-50 text-green-700 text-xs font-medium px-2.5 py-1 rounded-full">Actif</span>
+                </div>
+                {% endfor %}
+            </div>
+            {% else %}
+            <div class="p-8 text-center text-gray-400">
+                <p class="text-sm">Aucun abonnement actif</p>
+                <a href="{% url 'fai:offers' %}" class="text-sm font-semibold text-gray-600 mt-1 inline-block">Voir les offres</a>
+            </div>
+            {% endif %}
+        </div>
+
+        <!-- Pressing -->
+        <div class="bg-white rounded-xl border border-gray-100 overflow-hidden">
+            <div class="flex items-center justify-between px-6 py-4 border-b border-gray-100">
+                <h2 class="font-bold text-gray-900"><i class="fas fa-shirt text-blue-400 mr-2"></i>Commandes Pressing</h2>
+                <a href="{% url 'pressing:tracking' %}" class="text-sm text-gray-500 hover:text-gray-900 transition">Voir tout</a>
+            </div>
+            {% if recent_pressing %}
+            <div class="divide-y divide-gray-50">
+                {% for prs in recent_pressing %}
+                <div class="px-6 py-4 flex items-center gap-4">
+                    <div class="w-10 h-10 bg-blue-50 rounded-lg flex items-center justify-center">
+                        <i class="fas fa-shirt text-blue-600"></i>
+                    </div>
+                    <div class="flex-1">
+                        <p class="text-sm font-semibold text-gray-900">PRS-{{ prs.order_number }}</p>
+                        <p class="text-xs text-gray-400">{{ prs.created_at|date:"d/m/Y" }}</p>
+                    </div>
+                    <span class="text-sm font-bold text-gray-900">{{ prs.total|intcomma }} F</span>
+                    <span class="px-2.5 py-1 rounded-full text-xs font-medium
+                        {% if prs.status == 'delivered' %}bg-green-50 text-green-700
+                        {% elif prs.status == 'in_progress' %}bg-blue-50 text-blue-700
+                        {% else %}bg-amber-50 text-amber-700{% endif %}">
+                        {{ prs.get_status_display }}
+                    </span>
+                </div>
+                {% endfor %}
+            </div>
+            {% else %}
+            <div class="p-8 text-center text-gray-400">
+                <p class="text-sm">Aucune commande pressing</p>
+                <a href="{% url 'pressing:services' %}" class="text-sm font-semibold text-blue-600 mt-1 inline-block">Commander</a>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,43 @@
+{% load humanize %}
+
+<div id="notifListInner">
+    {% if notifications %}
+    <div class="divide-y divide-gray-50">
+        {% for notif in notifications %}
+        <a href="{% url 'notifications:mark_read' notif.id %}?next={{ notif.link|default:'/' }}"
+           class="flex items-start gap-3 px-5 py-3.5 hover:bg-gray-50/50 transition {% if not notif.is_read %}bg-green-50/30{% endif %}"
+           id="notif-{{ notif.id }}">
+            <div class="w-9 h-9 rounded-full flex items-center justify-center flex-shrink-0 mt-0.5
+                {% if notif.type_notif == 'order' %}bg-green-50
+                {% elif notif.type_notif == 'pressing' %}bg-blue-50
+                {% elif notif.type_notif == 'fai' %}bg-gray-100
+                {% elif notif.type_notif == 'chat' %}bg-amber-50
+                {% elif notif.type_notif == 'payment' %}bg-purple-50
+                {% else %}bg-gray-100{% endif %}">
+                {% if notif.type_notif == 'order' %}<i class="fas fa-box text-green-600 text-xs"></i>
+                {% elif notif.type_notif == 'pressing' %}<i class="fas fa-shirt text-blue-600 text-xs"></i>
+                {% elif notif.type_notif == 'fai' %}<i class="fas fa-wifi text-gray-600 text-xs"></i>
+                {% elif notif.type_notif == 'chat' %}<i class="fas fa-comment text-amber-600 text-xs"></i>
+                {% elif notif.type_notif == 'payment' %}<i class="fas fa-credit-card text-purple-600 text-xs"></i>
+                {% else %}<i class="fas fa-bell text-gray-500 text-xs"></i>{% endif %}
+            </div>
+            <div class="flex-1 min-w-0">
+                <div class="flex items-start justify-between gap-2">
+                    <p class="text-sm font-medium text-gray-900 leading-snug {% if not notif.is_read %}font-semibold{% endif %}">{{ notif.title }}</p>
+                    {% if not notif.is_read %}
+                    <span class="w-2 h-2 bg-green-500 rounded-full flex-shrink-0 mt-1.5"></span>
+                    {% endif %}
+                </div>
+                <p class="text-xs text-gray-500 mt-0.5 line-clamp-2">{{ notif.message }}</p>
+                <p class="text-[10px] text-gray-400 mt-1">{{ notif.created_at|timesince }}</p>
+            </div>
+        </a>
+        {% endfor %}
+    </div>
+    {% else %}
+    <div class="p-10 text-center text-gray-400">
+        <i class="fas fa-bell-slash text-3xl mb-2"></i>
+        <p class="text-sm">Aucune notification</p>
+    </div>
+    {% endif %}
+</div>

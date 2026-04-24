@@ -1,0 +1,256 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Chat{% endblock %}
+
+{% block extra_css %}
+<style>
+    .messages-container {
+        height: calc(100vh - 280px);
+        min-height: 400px;
+        overflow-y: auto;
+        scroll-behavior: smooth;
+    }
+    .msg-bubble {
+        max-width: 75%;
+        animation: msgIn 0.2s ease-out;
+    }
+    @keyframes msgIn {
+        from { opacity: 0; transform: translateY(8px); }
+        to { opacity: 1; transform: translateY(0); }
+    }
+    .msg-sent .msg-bubble {
+        background: #111827;
+        color: white;
+        border-radius: 1rem 1rem 0.25rem 1rem;
+    }
+    .msg-received .msg-bubble {
+        background: white;
+        color: #111827;
+        border: 1px solid #E5E7EB;
+        border-radius: 1rem 1rem 1rem 0.25rem;
+    }
+    .typing-indicator span {
+        display: inline-block;
+        width: 6px; height: 6px;
+        background: #9CA3AF;
+        border-radius: 50%;
+        animation: typing 1.2s infinite;
+    }
+    .typing-indicator span:nth-child(2) { animation-delay: 0.2s; }
+    .typing-indicator span:nth-child(3) { animation-delay: 0.4s; }
+    @keyframes typing {
+        0%, 60%, 100% { transform: translateY(0); }
+        30% { transform: translateY(-6px); }
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="max-w-4xl mx-auto px-4 py-4">
+    <!-- Header salon -->
+    <div class="bg-white rounded-t-2xl border border-gray-100 border-b-0 px-5 py-3 flex items-center gap-3">
+        <a href="{% url 'chat:inbox' %}" class="w-9 h-9 rounded-lg hover:bg-gray-100 flex items-center justify-center text-gray-500 transition">
+            <i class="fas fa-arrow-left text-sm"></i>
+        </a>
+        <div class="w-10 h-10 rounded-full bg-gray-900 flex items-center justify-center">
+            {% if room.assigned_to %}
+            <span class="text-white text-sm font-bold">{{ room.assigned_to.first_name.0|default:room.assigned_to.username.0|upper }}</span>
+            {% else %}
+            <span class="text-white text-sm font-bold">DK</span>
+            {% endif %}
+        </div>
+        <div class="flex-1">
+            <h2 class="text-sm font-semibold text-gray-900">
+                {% if room.assigned_to %}
+                {{ room.assigned_to.get_full_name|default:room.assigned_to.username }}
+                {% else %}
+                Support DK-PRESS
+                {% endif %}
+            </h2>
+            <p class="text-xs text-green-600 flex items-center gap-1">
+                <span class="w-1.5 h-1.5 bg-green-500 rounded-full"></span> En ligne
+            </p>
+        </div>
+        <span class="text-[10px] font-bold px-2 py-0.5 rounded-full
+            {% if room.room_type == 'admin' %}bg-orange-50 text-orange-600{% else %}bg-blue-50 text-blue-600{% endif %}">
+            {{ room.get_room_type_display }}
+        </span>
+    </div>
+
+    <!-- Messages -->
+    <div class="messages-container bg-gray-50 border-x border-gray-100 px-5 py-4 space-y-3" id="messagesContainer">
+        <div class="text-center">
+            <span class="text-[11px] text-gray-400 bg-gray-200 px-3 py-1 rounded-full">Début de la conversation</span>
+        </div>
+
+        {% for msg in messages %}
+        {% if msg.sender == user %}
+        <div class="flex justify-end msg-sent">
+            <div class="msg-bubble px-4 py-2.5 shadow-sm">
+                {% if msg.message_type == 'text' %}
+                <p class="text-sm leading-relaxed">{{ msg.content|linebreaksbr }}</p>
+                {% elif msg.message_type == 'image' %}
+                <img src="{{ msg.file.url }}" alt="" class="rounded-lg max-w-xs max-h-48 object-cover">
+                {% elif msg.message_type == 'file' %}
+                <a href="{{ msg.file.url }}" class="flex items-center gap-2 text-sm hover:underline">
+                    <i class="fas fa-file"></i> {{ msg.file.name|cut:"chat_files/" }}
+                </a>
+                {% endif %}
+                <p class="text-[10px] text-gray-400 mt-1 text-right">{{ msg.created_at|date:"H:i" }}</p>
+            </div>
+        </div>
+        {% else %}
+        <div class="flex items-start gap-2 msg-received">
+            <div class="w-7 h-7 rounded-full bg-gray-900 flex items-center justify-center flex-shrink-0 mt-1">
+                <span class="text-white text-[10px] font-bold">{{ msg.sender.first_name.0|default:msg.sender.username.0|upper }}</span>
+            </div>
+            <div class="msg-bubble px-4 py-2.5 shadow-sm">
+                {% if msg.message_type == 'text' %}
+                <p class="text-sm leading-relaxed">{{ msg.content|linebreaksbr }}</p>
+                {% elif msg.message_type == 'image' %}
+                <img src="{{ msg.file.url }}" alt="" class="rounded-lg max-w-xs max-h-48 object-cover">
+                {% elif msg.message_type == 'file' %}
+                <a href="{{ msg.file.url }}" class="flex items-center gap-2 text-sm hover:underline">
+                    <i class="fas fa-file"></i> {{ msg.file.name|cut:"chat_files/" }}
+                </a>
+                {% elif msg.message_type == 'system' %}
+                <p class="text-xs text-gray-500 italic">{{ msg.content }}</p>
+                {% endif %}
+                <p class="text-[10px] text-gray-400 mt-1">{{ msg.created_at|date:"H:i" }}</p>
+            </div>
+        </div>
+        {% endif %}
+        {% endfor %}
+
+        <!-- Indicateur de frappe -->
+        <div id="typingIndicator" class="hidden flex items-start gap-2 msg-received">
+            <div class="w-7 h-7 rounded-full bg-gray-900 flex items-center justify-center flex-shrink-0">
+                <span class="text-white text-[10px] font-bold">DK</span>
+            </div>
+            <div class="msg-bubble px-4 py-3 shadow-sm">
+                <div class="typing-indicator flex gap-1">
+                    <span></span><span></span><span></span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Input -->
+    <div class="bg-white rounded-b-2xl border border-gray-100 border-t-0 p-4">
+        <form id="chatForm" class="flex items-center gap-2">
+            <label class="w-10 h-10 rounded-lg hover:bg-gray-100 flex items-center justify-center text-gray-400 hover:text-gray-600 transition cursor-pointer flex-shrink-0" title="Joindre un fichier">
+                <i class="fas fa-paperclip"></i>
+                <input type="file" id="fileInput" class="hidden" accept="image/*,.pdf,.doc,.docx">
+            </label>
+            <input type="text" id="messageInput" placeholder="Écrire un message..." autocomplete="off"
+                   class="flex-1 border border-gray-200 rounded-xl px-4 py-2.5 text-sm outline-none focus:ring-2 focus:ring-gray-900 focus:border-transparent transition">
+            <button type="submit" class="w-10 h-10 bg-gray-900 text-white rounded-xl flex items-center justify-center hover:bg-gray-800 active:scale-95 transition flex-shrink-0">
+                <i class="fas fa-paper-plane text-sm"></i>
+            </button>
+        </form>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+const room_id = '{{ room.room_id }}';
+const user_id = {{ user.id }};
+const protocol = window.location.protocol === 'https:' ? 'wss:' : 'ws:';
+let ws = null;
+let reconnectAttempts = 0;
+
+function connectWebSocket() {
+    ws = new WebSocket(`${protocol}//${window.location.host}/ws/chat/${room_id}/`);
+
+    ws.onopen = () => {
+        console.log('WebSocket connecté');
+        reconnectAttempts = 0;
+    };
+
+    ws.onmessage = (e) => {
+        const data = JSON.parse(e.data);
+        if (data.sender_id !== user_id) {
+            appendMessage(data, false);
+        }
+    };
+
+    ws.onclose = () => {
+        console.log('WebSocket déconnecté, reconnexion...');
+        reconnectAttempts++;
+        if (reconnectAttempts < 5) {
+            setTimeout(connectWebSocket, 3000 * reconnectAttempts);
+        }
+    };
+
+    ws.onerror = (err) => console.error('WebSocket erreur:', err);
+}
+
+function appendMessage(data, isSent) {
+    const container = document.getElementById('messagesContainer');
+    const div = document.createElement('div');
+    div.className = isSent ? 'flex justify-end msg-sent' : 'flex items-start gap-2 msg-received';
+
+    let content = '';
+    if (data.message_type === 'text') {
+        content = `<p class="text-sm leading-relaxed">${data.content}</p>`;
+    } else if (data.message_type === 'image') {
+        content = `<img src="${data.file_url}" alt="" class="rounded-lg max-w-xs max-h-48 object-cover">`;
+    } else if (data.message_type === 'file') {
+        content = `<a href="${data.file_url}" class="flex items-center gap-2 text-sm hover:underline"><i class="fas fa-file"></i> Fichier</a>`;
+    }
+
+    const avatar = isSent ? '' : `
+        <div class="w-7 h-7 rounded-full bg-gray-900 flex items-center justify-center flex-shrink-0 mt-1">
+            <span class="text-white text-[10px] font-bold">${data.sender_name ? data.sender_name[0].toUpperCase() : 'DK'}</span>
+        </div>`;
+
+    div.innerHTML = `${avatar}<div class="msg-bubble px-4 py-2.5 shadow-sm">${content}<p class="text-[10px] ${isSent ? 'text-gray-400 text-right' : 'text-gray-400'} mt-1">${new Date(data.created_at).toLocaleTimeString('fr-FR', {hour:'2-digit',minute:'2-digit'})}</p></div>`;
+
+    container.appendChild(div);
+    container.scrollTop = container.scrollHeight;
+}
+
+// Envoi message
+document.getElementById('chatForm').addEventListener('submit', (e) => {
+    e.preventDefault();
+    const input = document.getElementById('messageInput');
+    const content = input.value.trim();
+    if (!content || !ws || ws.readyState !== WebSocket.OPEN) return;
+
+    ws.send(JSON.stringify({ type: 'text', content }));
+    input.value = '';
+    input.focus();
+});
+
+// Envoi fichier
+document.getElementById('fileInput').addEventListener('change', (e) => {
+    const file = e.target.files[0];
+    if (!file || !ws || ws.readyState !== WebSocket.OPEN) return;
+
+    const formData = new FormData();
+    formData.append('file', file);
+    formData.append('room_id', room_id);
+
+    fetch('/chat/upload/', {
+        method: 'POST',
+        headers: { 'X-CSRFToken': '{{ csrf_token }}' },
+        body: formData
+    })
+    .then(r => r.json())
+    .then(data => {
+        const msgType = file.type.startsWith('image/') ? 'image' : 'file';
+        ws.send(JSON.stringify({ type: msgType, content: '', file_url: data.url }));
+    });
+    e.target.value = '';
+});
+
+// Scroll en bas au chargement
+document.addEventListener('DOMContentLoaded', () => {
+    const container = document.getElementById('messagesContainer');
+    container.scrollTop = container.scrollHeight;
+    connectWebSocket();
+});
+</script>
+{% endblock %}

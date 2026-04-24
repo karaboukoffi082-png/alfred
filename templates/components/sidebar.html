@@ -1,0 +1,68 @@
+{% load humanize %}
+<div class="bg-white rounded-xl border border-gray-100 p-5">
+    <h3 class="font-semibold text-gray-900 text-sm mb-3 flex items-center gap-2">
+        <i class="fas fa-th-list text-gray-400"></i> Catégories
+    </h3>
+    <nav class="space-y-0.5">
+        {% for cat in categories %}
+        <a href="{% url 'shop:catalog' %}?category={{ cat.slug }}"
+           class="flex items-center gap-2.5 px-3 py-2.5 rounded-lg text-sm transition
+           {% if current_category == cat.slug %}bg-green-50 text-green-700 font-semibold{% else %}text-gray-600 hover:bg-gray-50 hover:text-gray-900{% endif %}">
+            {% if cat.icon %}<i class="{{ cat.icon }} w-4 text-center {% if current_category == cat.slug %}text-green-600{% else %}text-gray-400{% endif %}"></i>{% endif %}
+            <span>{{ cat.name }}</span>
+            <span class="ml-auto text-xs text-gray-400">{{ cat.products.count }}</span>
+        </a>
+
+        <!-- Sous-catégories (affichées seulement si cette catégorie est active) -->
+        {% if current_category == cat.slug %}
+            {% for sub in cat.subcategories.all %}
+            <a href="{% url 'shop:catalog' %}?category={{ cat.slug }}&subcategory={{ sub.slug }}"
+               class="flex items-center gap-2.5 pl-10 pr-3 py-2 rounded-lg text-sm transition
+               {% if current_subcategory == sub.slug %}bg-green-100 text-green-800 font-medium{% else %}text-gray-500 hover:bg-gray-50 hover:text-gray-700{% endif %}">
+                <span class="w-1.5 h-1.5 rounded-full {% if current_subcategory == sub.slug %}bg-green-500{% else %}bg-gray-300{% endif %}"></span>
+                <span>{{ sub.name }}</span>
+            </a>
+            {% endfor %}
+        {% endif %}
+        {% endfor %}
+    </nav>
+
+    <!-- Filtre prix -->
+    <div class="mt-5 pt-4 border-t border-gray-100">
+        <h4 class="text-sm font-semibold text-gray-900 mb-3">Fourchette de prix</h4>
+        <form method="get" id="priceFilterForm" class="space-y-2">
+            <input type="hidden" name="category" value="{{ current_category }}">
+            <input type="hidden" name="subcategory" value="{{ current_subcategory }}">
+            <input type="hidden" name="q" value="{{ filters.q|default:'' }}">
+            <div class="flex gap-2">
+                <input type="number" name="price_min" placeholder="Min" value="{{ filters.price_min|default:'' }}"
+                       class="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent">
+                <input type="number" name="price_max" placeholder="Max" value="{{ filters.price_max|default:'' }}"
+                       class="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent">
+            </div>
+            <button type="submit" class="w-full py-2 bg-gray-900 text-white text-sm font-medium rounded-lg hover:bg-gray-800 transition">
+                Filtrer
+            </button>
+        </form>
+    </div>
+
+    <!-- Produits populaires -->
+    <div class="mt-5 pt-4 border-t border-gray-100">
+        <h4 class="text-sm font-semibold text-gray-900 mb-3">Populaires</h4>
+        <div class="space-y-3">
+            {% for p in featured_products|slice:":4" %}
+            <a href="{{ p.get_absolute_url }}" class="flex items-center gap-3 group">
+                <div class="w-12 h-12 rounded-lg overflow-hidden bg-gray-100 flex-shrink-0">
+                    {% if p.image %}
+                    <img src="{{ p.image.url }}" alt="" class="w-full h-full object-cover">
+                    {% endif %}
+                </div>
+                <div class="min-w-0">
+                    <p class="text-xs font-medium text-gray-700 group-hover:text-gray-900 truncate transition">{{ p.name }}</p>
+                    <p class="text-xs font-bold text-green-600 mt-0.5">{{ p.price|intcomma }} FCFA</p>
+                </div>
+            </a>
+            {% endfor %}
+        </div>
+    </div>
+</div>

@@ -1,0 +1,160 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load humanize %}
+{% block title %}Administration — DK-PRESS{% endblock %}
+
+{% block content %}
+<div class="max-w-7xl mx-auto px-4 py-8">
+    <div class="flex items-center justify-between mb-8">
+        <div>
+            <h1 class="text-2xl font-bold text-gray-900" style="font-family:'Outfit',sans-serif">
+                <i class="fas fa-cog text-gray-400 mr-2"></i>Administration
+            </h1>
+            <p class="text-sm text-gray-500 mt-1">Gestion complète de la plateforme DK-PRESS</p>
+        </div>
+        <a href="/admin/" class="bg-orange-600 text-white px-4 py-2 rounded-lg text-sm font-medium hover:bg-orange-700 transition">
+            <i class="fas fa-django mr-1"></i> Django Admin
+        </a>
+    </div>
+
+    <!-- Stats grid -->
+    <div class="grid grid-cols-2 lg:grid-cols-5 gap-4 mb-8">
+        <div class="bg-white rounded-xl border border-gray-100 p-5">
+            <div class="flex items-center gap-3">
+                <div class="w-11 h-11 bg-green-50 rounded-lg flex items-center justify-center">
+                    <i class="fas fa-box text-green-600"></i>
+                </div>
+                <div>
+                    <p class="text-xl font-bold text-gray-900" style="font-family:'Outfit',sans-serif">{{ stats.total_orders|default:"0" }}</p>
+                    <p class="text-xs text-gray-500">Commandes</p>
+                </div>
+            </div>
+        </div>
+        <div class="bg-white rounded-xl border border-gray-100 p-5">
+            <div class="flex items-center gap-3">
+                <div class="w-11 h-11 bg-amber-50 rounded-lg flex items-center justify-center">
+                    <i class="fas fa-coins text-amber-600"></i>
+                </div>
+                <div>
+                    <p class="text-xl font-bold text-gray-900" style="font-family:'Outfit',sans-serif">{{ stats.total_revenue|default:"0" }}</p>
+                    <p class="text-xs text-gray-500">Revenu (FCFA)</p>
+                </div>
+            </div>
+        </div>
+        <div class="bg-white rounded-xl border border-gray-100 p-5">
+            <div class="flex items-center gap-3">
+                <div class="w-11 h-11 bg-blue-50 rounded-lg flex items-center justify-center">
+                    <i class="fas fa-shirt text-blue-600"></i>
+                </div>
+                <div>
+                    <p class="text-xl font-bold text-gray-900" style="font-family:'Outfit',sans-serif">{{ stats.total_pressing|default:"0" }}</p>
+                    <p class="text-xs text-gray-500">Pressing</p>
+                </div>
+            </div>
+        </div>
+        <div class="bg-white rounded-xl border border-gray-100 p-5">
+            <div class="flex items-center gap-3">
+                <div class="w-11 h-11 bg-gray-100 rounded-lg flex items-center justify-center">
+                    <i class="fas fa-wifi text-gray-700"></i>
+                </div>
+                <div>
+                    <p class="text-xl font-bold text-gray-900" style="font-family:'Outfit',sans-serif">{{ stats.total_subscriptions|default:"0" }}</p>
+                    <p class="text-xs text-gray-500">Abonnements</p>
+                </div>
+            </div>
+        </div>
+        <div class="bg-white rounded-xl border border-gray-100 p-5">
+            <div class="flex items-center gap-3">
+                <div class="w-11 h-11 bg-purple-50 rounded-lg flex items-center justify-center">
+                    <i class="fas fa-users text-purple-600"></i>
+                </div>
+                <div>
+                    <p class="text-xl font-bold text-gray-900" style="font-family:'Outfit',sans-serif">{{ stats.total_users|default:"0" }}</p>
+                    <p class="text-xs text-gray-500">Utilisateurs</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Raccourcis -->
+    <div class="grid sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
+        <a href="/admin/shop/product/" class="bg-white rounded-xl border border-gray-100 p-5 flex items-center gap-4 hover:shadow-md hover:border-green-200 transition group">
+            <div class="w-12 h-12 bg-green-50 rounded-xl flex items-center justify-center group-hover:scale-110 transition">
+                <i class="fas fa-seedling text-green-600"></i>
+            </div>
+            <div>
+                <h3 class="font-bold text-gray-900 text-sm">Produits</h3>
+                <p class="text-xs text-gray-500">Gérer le catalogue</p>
+            </div>
+        </a>
+        <a href="/admin/shop/order/" class="bg-white rounded-xl border border-gray-100 p-5 flex items-center gap-4 hover:shadow-md hover:border-blue-200 transition group">
+            <div class="w-12 h-12 bg-blue-50 rounded-xl flex items-center justify-center group-hover:scale-110 transition">
+                <i class="fas fa-shopping-bag text-blue-600"></i>
+            </div>
+            <div>
+                <h3 class="font-bold text-gray-900 text-sm">Commandes</h3>
+                <p class="text-xs text-gray-500">Suivi et gestion</p>
+            </div>
+        </a>
+        <a href="/admin/pressing/pressingorder/" class="bg-white rounded-xl border border-gray-100 p-5 flex items-center gap-4 hover:shadow-md hover:border-purple-200 transition group">
+            <div class="w-12 h-12 bg-blue-50 rounded-xl flex items-center justify-center group-hover:scale-110 transition">
+                <i class="fas fa-shirt text-blue-600"></i>
+            </div>
+            <div>
+                <h3 class="font-bold text-gray-900 text-sm">Pressing</h3>
+                <p class="text-xs text-gray-500">Commandes pressing</p>
+            </div>
+        </a>
+        <a href="/admin/fai/subscription/" class="bg-white rounded-xl border border-gray-100 p-5 flex items-center gap-4 hover:shadow-md hover:border-gray-300 transition group">
+            <div class="w-12 h-12 bg-gray-100 rounded-xl flex items-center justify-center group-hover:scale-110 transition">
+                <i class="fas fa-wifi text-gray-700"></i>
+            </div>
+            <div>
+                <h3 class="font-bold text-gray-900 text-sm">FAI</h3>
+                <p class="text-xs text-gray-500">Abonnements & Foyers</p>
+            </div>
+        </a>
+    </div>
+
+    <!-- Dernières commandes -->
+    <div class="bg-white rounded-xl border border-gray-100 overflow-hidden">
+        <div class="flex items-center justify-between px-6 py-4 border-b border-gray-100">
+            <h2 class="font-bold text-gray-900">Dernières commandes</h2>
+            <a href="/admin/shop/order/" class="text-sm text-gray-500 hover:text-gray-900 transition">Voir tout →</a>
+        </div>
+        <div class="overflow-x-auto">
+            <table class="w-full text-sm">
+                <thead>
+                    <tr class="bg-gray-50 text-left">
+                        <th class="px-6 py-3 text-xs font-semibold text-gray-500 uppercase tracking-wider">Réf</th>
+                        <th class="px-6 py-3 text-xs font-semibold text-gray-500 uppercase tracking-wider">Client</th>
+                        <th class="px-6 py-3 text-xs font-semibold text-gray-500 uppercase tracking-wider">Montant</th>
+                        <th class="px-6 py-3 text-xs font-semibold text-gray-500 uppercase tracking-wider">Statut</th>
+                        <th class="px-6 py-3 text-xs font-semibold text-gray-500 uppercase tracking-wider">Date</th>
+                    </tr>
+                </thead>
+                <tbody class="divide-y divide-gray-50">
+                    {% for order in recent_orders %}
+                    <tr class="hover:bg-gray-50/50 transition">
+                        <td class="px-6 py-3 font-semibold text-gray-900">CMD-{{ order.order_number }}</td>
+                        <td class="px-6 py-3 text-gray-600">{{ order.user.get_full_name|default:order.user.username }}</td>
+                        <td class="px-6 py-3 font-medium text-gray-900">{{ order.total|intcomma }} FCFA</td>
+                        <td class="px-6 py-3">
+                            <span class="px-2 py-0.5 rounded-full text-xs font-medium
+                                {% if order.status == 'delivered' %}bg-green-50 text-green-700
+                                {% elif order.status == 'cancelled' %}bg-red-50 text-red-700
+                                {% else %}bg-amber-50 text-amber-700{% endif %}">
+                                {{ order.get_status_display }}
+                            </span>
+                        </td>
+                        <td class="px-6 py-3 text-gray-400">{{ order.created_at|date:"d/m/Y H:i" }}</td>
+                    </tr>
+                    {% empty %}
+                    <tr><td colspan="5" class="px-6 py-8 text-center text-gray-400">Aucune commande</td></tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+{% endblock %}

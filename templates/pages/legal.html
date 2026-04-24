@@ -1,0 +1,78 @@
+{% extends 'base.html' %}
+
+{% block title %}Mentions Légales & Confidentialité{% endblock %}
+
+{% block content %}
+<section class="bg-gray-900">
+    <div class="max-w-4xl mx-auto px-4 py-20 text-center">
+        <h1 class="text-4xl font-extrabold text-white" style="font-family:'Outfit',sans-serif">Mentions Légales</h1>
+        <p class="text-gray-400 mt-3">Politique de confidentialité et conditions d'utilisation</p>
+    </div>
+</section>
+
+<section class="py-16 bg-white">
+    <div class="max-w-3xl mx-auto px-4 prose prose-sm prose-gray">
+        <!-- Navigation interne -->
+        <div class="flex flex-wrap gap-2 mb-10 not-prose">
+            <a href="#conditions" class="px-4 py-2 bg-gray-100 rounded-lg text-sm font-medium text-gray-700 hover:bg-gray-200 transition">Conditions d'utilisation</a>
+            <a href="#confidentialite" class="px-4 py-2 bg-gray-100 rounded-lg text-sm font-medium text-gray-700 hover:bg-gray-200 transition">Confidentialité</a>
+            <a href="#cookies" class="px-4 py-2 bg-gray-100 rounded-lg text-sm font-medium text-gray-700 hover:bg-gray-200 transition">Cookies</a>
+            <a href="#contact-legal" class="px-4 py-2 bg-gray-100 rounded-lg text-sm font-medium text-gray-700 hover:bg-gray-200 transition">Contact</a>
+        </div>
+
+        <div id="conditions" class="mb-12">
+            <h2 class="text-2xl font-bold text-gray-900 mb-4" style="font-family:'Outfit',sans-serif">1. Conditions Générales d'Utilisation</h2>
+            <p class="text-gray-600 leading-relaxed mb-3">L'utilisation de la plateforme DK-PRESS implique l'acceptation pleine et entière des présentes conditions générales. Ces conditions s'appliquent à tous les services proposés : boutique en ligne, service pressing et fournisseur d'accès internet.</p>
+
+            <h3 class="text-lg font-semibold text-gray-900 mt-6 mb-2">1.1 Inscription</h3>
+            <p class="text-gray-600 leading-relaxed mb-3">L'inscription est ouverte à toute personne physique majeure. L'utilisateur s'engage à fournir des informations exactes et à maintenir la confidentialité de ses identifiants.</p>
+
+            <h3 class="text-lg font-semibold text-gray-900 mt-6 mb-2">1.2 Commandes</h3>
+            <p class="text-gray-600 leading-relaxed mb-3">Toute commande passée sur la plateforme constitue un contrat de vente. DK-PRESS se réserve le droit d'annuler toute commande en cas de stock insuffisant ou d'erreur de prix.</p>
+
+            <h3 class="text-lg font-semibold text-gray-900 mt-6 mb-2">1.3 Paiement</h3>
+            <p class="text-gray-600 leading-relaxed mb-3">Les paiements sont traités via des opérateurs agréés (T-Money, Flooz, Stripe, PayPal). La commande est confirmée uniquement après réception de la confirmation de paiement.</p>
+
+            <h3 class="text-lg font-semibold text-gray-900 mt-6 mb-2">1.4 Livraison</h3>
+            <p class="text-gray-600 leading-relaxed">Les délais de livraison sont indicatifs et peuvent varier en fonction de la demande et de la zone de livraison. DK-PRESS n'est pas responsable des retards indépendants de sa volonté.</p>
+        </div>
+
+        <div id="confidentialite" class="mb-12">
+            <h2 class="text-2xl font-bold text-gray-900 mb-4" style="font-family:'Outfit',sans-serif">2. Politique de Confidentialité</h2>
+            <p class="text-gray-600 leading-relaxed mb-3">DK-PRESS s'engage à protéger la vie privée de ses utilisateurs. Les données personnelles collectées sont utilisées uniquement dans le cadre des services proposés.</p>
+
+            <h3 class="text-lg font-semibold text-gray-900 mt-6 mb-2">2.1 Données collectées</h3>
+            <ul class="list-disc pl-6 text-gray-600 space-y-1 mb-3">
+                <li>Nom, prénom, adresse email, numéro de téléphone</li>
+                <li>Adresse de livraison</li>
+                <li>Historique de commandes et paiements</li>
+                <li>Messages de chat avec le support</li>
+            </ul>
+
+            <h3 class="text-lg font-semibold text-gray-900 mt-6 mb-2">2.2 Utilisation des données</h3>
+            <p class="text-gray-600 leading-relaxed mb-3">Vos données sont utilisées pour : le traitement des commandes, l'envoi de notifications, l'amélioration de nos services, la communication relative à votre compte.</p>
+
+            <h3 class="text-lg font-semibold text-gray-900 mt-6 mb-2">2.3 Vos droits</h3>
+            <p class="text-gray-600 leading-relaxed">Conformément à la loi, vous disposez d'un droit d'accès, de rectification, de suppression et de portabilité de vos données. Contactez-nous à divakoboyo@gmail.com pour exercer ces droits.</p>
+        </div>
+
+        <div id="cookies" class="mb-12">
+            <h2 class="text-2xl font-bold text-gray-900 mb-4" style="font-family:'Outfit',sans-serif">3. Cookies</h2>
+            <p class="text-gray-600 leading-relaxed">DK-PRESS utilise des cookies essentiels au fonctionnement du site (session, authentification), des cookies analytiques pour comprendre l'utilisation du site, et des cookies de préférences pour mémoriser vos choix.</p>
+        </div>
+
+        <div id="contact-legal" class="mb-8">
+            <h2 class="text-2xl font-bold text-gray-900 mb-4" style="font-family:'Outfit',sans-serif">4. Contact</h2>
+            <p class="text-gray-600 leading-relaxed">Pour toute question relative aux présentes mentions légales :</p>
+            <div class="bg-gray-50 rounded-xl p-5 mt-4 space-y-2">
+                <p class="text-sm text-gray-700"><strong>Email :</strong> divakoboyo@gmail.com</p>
+                <p class="text-sm text-gray-700"><strong>Téléphone :</strong> 79 01 73 84</p>
+                <p class="text-sm text-gray-700"><strong>WhatsApp :</strong> 90 89 98 14</p>
+                <p class="text-sm text-gray-700"><strong>Adresse :</strong> Lomé, Togo</p>
+            </div>
+        </div>
+
+        <p class="text-xs text-gray-400 mt-8 text-center">Dernière mise à jour : Avril 2026</p>
+    </div>
+</section>
+{% endblock %}

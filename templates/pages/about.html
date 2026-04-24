@@ -1,0 +1,140 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}A propos{% endblock %}
+
+{% block content %}
+<!-- Hero -->
+<section class="bg-gray-900 relative overflow-hidden">
+    <div class="absolute inset-0 opacity-10">
+        <div class="absolute top-0 right-0 w-96 h-96 bg-green-500 rounded-full blur-[128px]"></div>
+    </div>
+    <div class="max-w-4xl mx-auto px-4 py-20 text-center relative z-10">
+        <span class="text-sm font-semibold text-green-400 uppercase tracking-wider">Qui sommes-nous</span>
+        <h1 class="text-4xl md:text-5xl font-extrabold text-white mt-3" style="font-family:'Outfit',sans-serif">A propos de DK-PRESS</h1>
+        <p class="text-gray-400 mt-4 text-lg max-w-2xl mx-auto">Une plateforme multi-services née de la conviction que la technologie peut simplifier le quotidien des familles togolaises.</p>
+    </div>
+</section>
+
+<!-- Notre histoire -->
+<section class="py-16 bg-white">
+    <div class="max-w-7xl mx-auto px-4">
+        <div class="grid lg:grid-cols-2 gap-12 items-center">
+            <div>
+                <span class="text-sm font-semibold text-green-600 uppercase tracking-wider">Notre histoire</span>
+                <h2 class="text-3xl font-extrabold text-gray-900 mt-2 mb-6" style="font-family:'Outfit',sans-serif">Né à Lomé, pensé pour l'Afrique</h2>
+                <div class="space-y-4 text-gray-600 leading-relaxed">
+                    <p>DK-PRESS est né d'un constat simple : les foyers togolais perdent trop de temps dans des démarches quotidiennes — faire les courses au marché, déposer le pressing, chercher du crédit internet.</p>
+                    <p>Nous avons créé une plateforme unique qui centralise ces trois besoins essentiels : <strong class="text-gray-900">l'achat de produits agricoles locaux</strong>, <strong class="text-gray-900">le service pressing</strong> et <strong class="text-gray-900">l'accès internet haut débit FTTH</strong>.</p>
+                    <p>Notre mission est de digitaliser ces services pour les rendre accessibles à tous, partout à Lomé, avec un paiement simple via Mobile Money.</p>
+                </div>
+            </div>
+            <div class="grid grid-cols-2 gap-4">
+                <div class="space-y-4">
+                    <div class="bg-green-50 rounded-2xl p-6 text-center">
+                        <i class="fas fa-leaf text-3xl text-green-600 mb-3"></i>
+                        <p class="text-2xl font-bold text-gray-900" style="font-family:'Outfit',sans-serif">500+</p>
+                        <p class="text-sm text-gray-500">Produits locaux</p>
+                    </div>
+                    <div class="bg-blue-50 rounded-2xl p-6 text-center">
+                        <i class="fas fa-shirt text-3xl text-blue-600 mb-3"></i>
+                        <p class="text-2xl font-bold text-gray-900" style="font-family:'Outfit',sans-serif">4</p>
+                        <p class="text-sm text-gray-500">Services pressing</p>
+                    </div>
+                </div>
+                <div class="space-y-4 mt-8">
+                    <div class="bg-gray-50 rounded-2xl p-6 text-center">
+                        <i class="fas fa-wifi text-3xl text-gray-700 mb-3"></i>
+                        <p class="text-2xl font-bold text-gray-900" style="font-family:'Outfit',sans-serif">FTTH</p>
+                        <p class="text-sm text-gray-500">Fibre optique</p>
+                    </div>
+                    <div class="bg-amber-50 rounded-2xl p-6 text-center">
+                        <i class="fas fa-users text-3xl text-amber-600 mb-3"></i>
+                        <p class="text-2xl font-bold text-gray-900" style="font-family:'Outfit',sans-serif">2K+</p>
+                        <p class="text-sm text-gray-500">Clients satisfaits</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Valeurs -->
+<section class="py-16 bg-gray-50">
+    <div class="max-w-7xl mx-auto px-4">
+        <div class="text-center mb-12">
+            <span class="text-sm font-semibold text-green-600 uppercase tracking-wider">Nos valeurs</span>
+            <h2 class="text-3xl font-extrabold text-gray-900 mt-2" style="font-family:'Outfit',sans-serif">Ce qui nous guide chaque jour</h2>
+        </div>
+        <div class="grid md:grid-cols-3 gap-6">
+            <div class="bg-white rounded-2xl border border-gray-100 p-8">
+                <div class="w-14 h-14 bg-green-50 rounded-xl flex items-center justify-center mb-5">
+                    <i class="fas fa-hand-holding-heart text-xl text-green-600"></i>
+                </div>
+                <h3 class="text-lg font-bold text-gray-900 mb-2">Proximité</h3>
+                <p class="text-sm text-gray-500 leading-relaxed">Nous travaillons avec les producteurs locaux et restons proches de nos clients pour comprendre leurs besoins réels.</p>
+            </div>
+            <div class="bg-white rounded-2xl border border-gray-100 p-8">
+                <div class="w-14 h-14 bg-blue-50 rounded-xl flex items-center justify-center mb-5">
+                    <i class="fas fa-shield-alt text-xl text-blue-600"></i>
+                </div>
+                <h3 class="text-lg font-bold text-gray-900 mb-2">Qualité</h3>
+                <p class="text-sm text-gray-500 leading-relaxed">Chaque produit est sélectionné, chaque vêtement traité avec soin, chaque connexion optimisée pour la meilleure expérience.</p>
+            </div>
+            <div class="bg-white rounded-2xl border border-gray-100 p-8">
+                <div class="w-14 h-14 bg-amber-50 rounded-xl flex items-center justify-center mb-5">
+                    <i class="fas fa-bolt text-xl text-amber-600"></i>
+                </div>
+                <h3 class="text-lg font-bold text-gray-900 mb-2">Innovation</h3>
+                <p class="text-sm text-gray-500 leading-relaxed">Nous utilisons la technologie pour éliminer les intermédiaires et rendre les services plus rapides et plus abordables.</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Équipe -->
+<section class="py-16 bg-white">
+    <div class="max-w-4xl mx-auto px-4 text-center">
+        <span class="text-sm font-semibold text-green-600 uppercase tracking-wider">Notre équipe</span>
+        <h2 class="text-3xl font-extrabold text-gray-900 mt-2 mb-10" style="font-family:'Outfit',sans-serif">Les personnes derrière DK-PRESS</h2>
+        <div class="grid sm:grid-cols-3 gap-8">
+            <div>
+                <div class="w-28 h-28 mx-auto rounded-full bg-gray-900 flex items-center justify-center mb-4">
+                    <span class="text-white text-3xl font-bold" style="font-family:'Outfit',sans-serif">DK</span>
+                </div>
+                <h3 class="font-bold text-gray-900">DIVANE Koboyo</h3>
+                <p class="text-sm text-gray-500">Fondateur & Directeur</p>
+                <div class="flex justify-center gap-2 mt-3">
+                    <a href="mailto:divakoboyo@gmail.com" class="text-gray-400 hover:text-gray-600 transition"><i class="fas fa-envelope"></i></a>
+                    <a href="tel:+22879017384" class="text-gray-400 hover:text-gray-600 transition"><i class="fas fa-phone"></i></a>
+                    <a href="https://wa.me/22890899814" class="text-gray-400 hover:text-green-600 transition"><i class="fab fa-whatsapp"></i></a>
+                </div>
+            </div>
+            <div>
+                 
+                <div class="w-28 h-28 mx-auto rounded-full bg-gray-900 flex items-center justify-center mb-4">
+                    <span class="text-white text-3xl font-bold" style="font-family:'Outfit',sans-serif">KKM</span>
+                </div>
+                <h3 class="font-bold text-gray-900">KARABOU K. Magnouréwa</h3>
+                <p class="text-sm text-gray-500">Développeur & T. web designer</p>
+                <div class="flex justify-center gap-2 mt-3">
+                    <a href="mailto:karaboukoffimagnourewa@gmail.com" class="text-gray-400 hover:text-gray-600 transition"><i class="fas fa-envelope"></i></a>
+                    <a href="tel:+22890614169" class="text-gray-400 hover:text-gray-600 transition"><i class="fas fa-phone"></i></a>
+                    <a href="https://wa.me/22890614169" class="text-gray-400 hover:text-green-600 transition"><i class="fab fa-whatsapp"></i></a>
+                </div>
+            </div>
+            <div>
+                <div class="w-28 h-28 mx-auto rounded-full bg-gray-200 flex items-center justify-center mb-4">
+                    <i class="fas fa-user text-3xl text-gray-400"></i>
+                </div>
+                <h3 class="font-bold text-gray-900">Équipe Support</h3>
+                <p class="text-sm text-gray-500">Service client & Logistique</p>
+                <div class="flex justify-center gap-2 mt-3">
+                    <a href="mailto:divakoboyo@gmail.com" class="text-gray-400 hover:text-gray-600 transition"><i class="fas fa-envelope"></i></a>
+                    <a href="tel:+22879017384" class="text-gray-400 hover:text-gray-600 transition"><i class="fas fa-phone"></i></a>
+                    <a href="https://wa.me/22890899814" class="text-gray-400 hover:text-green-600 transition"><i class="fab fa-whatsapp"></i></a>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}

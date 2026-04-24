@@ -1,0 +1,23 @@
+/* ============ FAI SPÉCIFIQUE ============ */
+.offer-card {
+    position: relative;
+}
+.offer-card.popular {
+    border-color: #111827;
+    box-shadow: 0 10px 40px rgba(17,24,39,0.1);
+    transform: scale(1.02);
+}
+.offer-speed {
+    font-size: 3.5rem;
+    font-weight: 800;
+    line-height: 1;
+    font-family: 'Outfit', sans-serif;
+    background: linear-gradient(135deg, #111827, #374151);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+.captive-portal {
+    /* Styles spécifiques au portail captif (utilisé hors base.html) */
+}

@@ -1,0 +1,134 @@
+{% extends 'base.html' %}
+{% load humanize %}
+
+{% block title %}Paiement{% endblock %}
+
+{% block extra_css %}
+<style>
+    .pulse-ring {
+        animation: pulseRing 1.5s ease-out infinite;
+    }
+    @keyframes pulseRing {
+        0% { transform: scale(0.8); opacity: 1; }
+        100% { transform: scale(2); opacity: 0; }
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="max-w-lg mx-auto px-4 py-12">
+    <div class="text-center mb-8">
+        <div class="w-20 h-20 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-4">
+            <i class="fas fa-credit-card text-3xl text-gray-400"></i>
+        </div>
+        <h1 class="text-2xl font-bold text-gray-900" style="font-family:'Outfit',sans-serif">Finaliser le paiement</h1>
+    </div>
+
+    {% if amount %}
+    <div class="bg-white rounded-2xl border border-gray-100 p-6 mb-6 text-center">
+        <p class="text-sm text-gray-500 mb-1">{{ description|default:"Montant à payer" }}</p>
+        <p class="text-4xl font-extrabold text-gray-900" style="font-family:'Outfit',sans-serif">{{ amount|intcomma }}</p>
+        <p class="text-sm text-gray-400 mt-1">FCFA</p>
+    </div>
+
+    <form method="post" action="{% url 'payments:initiate' %}" class="bg-white rounded-2xl border border-gray-100 p-6 space-y-5" id="paymentForm">
+        {% csrf_token %}
+
+        <!-- Opérateur -->
+        <div>
+            <label class="block text-sm font-medium text-gray-700 mb-3">Choisissez l'opérateur</label>
+            <div class="grid grid-cols-2 gap-3">
+                <label class="flex items-center gap-3 p-4 border border-gray-200 rounded-xl cursor-pointer hover:border-yellow-400 transition has-[:checked]:border-yellow-500 has-[:checked]:bg-yellow-50/50">
+                    <input type="radio" name="operator" value="tmoney" required class="w-4 h-4 text-yellow-600 focus:ring-yellow-500">
+                    <div>
+                        <span class="text-sm font-bold text-yellow-700">T-Money</span>
+                        <span class="text-xs text-gray-400 block">Moov Africa</span>
+                    </div>
+                </label>
+                <label class="flex items-center gap-3 p-4 border border-gray-200 rounded-xl cursor-pointer hover:border-orange-400 transition has-[:checked]:border-orange-500 has-[:checked]:bg-orange-50/50">
+                    <input type="radio" name="operator" value="flooz" required class="w-4 h-4 text-orange-600 focus:ring-orange-500">
+                    <div>
+                        <span class="text-sm font-bold text-orange-700">Flooz</span>
+                        <span class="text-xs text-gray-400 block">Moov Money</span>
+                    </div>
+                </label>
+            </div>
+        </div>
+
+        <!-- Numéro -->
+        <div>
+            <label class="block text-sm font-medium text-gray-700 mb-1.5">Numéro Mobile Money</label>
+            <input type="tel" name="phone_number" required placeholder="90 89 98 14"
+                   class="w-full border border-gray-200 rounded-xl px-4 py-3 text-sm outline-none focus:ring-2 focus:ring-gray-900 focus:border-transparent transition">
+            <p class="text-xs text-gray-400 mt-1.5">Assurez-vous que le numéro est le même que celui lié à votre compte Mobile Money.</p>
+        </div>
+
+        <button type="submit" id="payBtn" class="w-full bg-gray-900 text-white py-3.5 rounded-xl font-bold text-base hover:bg-gray-800 active:scale-[0.98] transition-all">
+            <i class="fas fa-lock mr-2"></i>Payer {{ amount|intcomma }} FCFA
+        </button>
+
+        <div class="flex items-center justify-center gap-4 pt-2">
+            <span class="text-xs text-gray-400"><i class="fas fa-shield-alt mr-1"></i>Paiement sécurisé</span>
+            <span class="text-xs text-gray-400"><i class="fas fa-bolt mr-1"></i>Confirmation instantanée</span>
+        </div>
+    </form>
+
+    <!-- État d'attente (affiché après soumission) -->
+    <div id="waitingState" class="hidden bg-white rounded-2xl border border-gray-100 p-8 text-center">
+        <div class="relative inline-block mb-6">
+            <div class="w-16 h-16 bg-amber-100 rounded-full flex items-center justify-center">
+                <i class="fas fa-spinner fa-spin text-2xl text-amber-600"></i>
+            </div>
+            <div class="absolute inset-0 w-16 h-16 bg-amber-200 rounded-full pulse-ring"></div>
+        </div>
+        <h3 class="text-lg font-bold text-gray-900 mb-2">Paiement en cours...</h3>
+        <p class="text-sm text-gray-500 mb-6">Veuillez confirmer le paiement sur votre téléphone. Ne fermez pas cette page.</p>
+        <div class="bg-gray-50 rounded-xl p-4 text-sm text-gray-600">
+            <p><strong>Montant :</strong> {{ amount|intcomma }} FCFA</p>
+            <p class="mt-1"><strong>Référence :</strong> DKP-<span id="refDisplay">...</span></p>
+        </div>
+    </div>
+
+    {% else %}
+    <div class="bg-white rounded-2xl border border-gray-100 p-8 text-center">
+        <i class="fas fa-exclamation-circle text-3xl text-gray-300 mb-3"></i>
+        <p class="text-gray-500">Aucun paiement en attente.</p>
+        <a href="{% url 'pages:home' %}" class="inline-flex items-center gap-2 mt-4 bg-gray-900 text-white px-6 py-2.5 rounded-xl text-sm font-semibold hover:bg-gray-800 transition">
+            Retour à l'accueil
+        </a>
+    </div>
+    {% endif %}
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+(function() {
+    const form = document.getElementById('paymentForm');
+    if (form) {
+        form.addEventListener('submit', function(e) {
+            // On cache le formulaire et on affiche l'état d'attente
+            document.getElementById('paymentForm').classList.add('hidden');
+            document.getElementById('waitingState').classList.remove('hidden');
+            document.getElementById('refDisplay').textContent = Math.random().toString(36).substring(2, 12).toUpperCase();
+
+            // Polling toutes les 3 secondes
+            const poll = setInterval(() => {
+                fetch('{% url "payments:check" %}')
+                    .then(r => r.json())
+                    .then(data => {
+                        if (data.status === 'success') {
+                            clearInterval(poll);
+                            window.location.href = '{% url "payments:success" %}';
+                        } else if (data.status === 'failed') {
+                            clearInterval(poll);
+                            window.location.href = '{% url "payments:failure" %}';
+                        }
+                    })
+                    .catch(err => console.error('Polling error:', err));
+            }, 3000);
+        });
+    }
+})();
+</script>
+{% endblock %}

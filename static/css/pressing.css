@@ -1,0 +1,35 @@
+/* ============ PRESSING SPÉCIFIQUE ============ */
+.pressing-status-bar {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+}
+.pressing-status-bar .step {
+    flex: 1;
+    height: 6px;
+    border-radius: 3px;
+    background: #E5E7EB;
+    transition: background 0.5s ease;
+}
+.pressing-status-bar .step.active {
+    background: #3B82F6;
+}
+.pressing-status-bar .step.done {
+    background: #22C55E;
+}
+
+.service-card-pressing {
+    position: relative;
+    overflow: hidden;
+}
+.service-card-pressing::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0;
+    width: 4px; height: 100%;
+    background: #3B82F6;
+    border-radius: 0 4px 4px 0;
+    opacity: 0;
+    transition: opacity 0.3s;
+}
+.service-card-pressing:hover::before { opacity: 1; }

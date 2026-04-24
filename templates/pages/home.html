@@ -1,0 +1,499 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load humanize %}
+
+{% block title %}Accueil{% endblock %}
+
+{% block extra_css %}
+<style>
+    /* ============ ANIMATIONS ============ */
+    @keyframes fadeSlideUp {
+        from { opacity: 0; transform: translateY(40px); }
+        to { opacity: 1; transform: translateY(0); }
+    }
+    @keyframes scaleIn {
+        from { opacity: 0; transform: scale(0.9); }
+        to { opacity: 1; transform: scale(1); }
+    }
+    @keyframes float {
+        0%, 100% { transform: translateY(0px); }
+        50% { transform: translateY(-15px); }
+    }
+    @keyframes shimmer {
+        0% { background-position: -200% center; }
+        100% { background-position: 200% center; }
+    }
+    
+    .anim-fade-up { animation: fadeSlideUp 0.8s ease-out forwards; opacity: 0; }
+    .anim-delay-1 { animation-delay: 0.2s; }
+    .anim-delay-2 { animation-delay: 0.4s; }
+    .anim-delay-3 { animation-delay: 0.6s; }
+    .anim-delay-4 { animation-delay: 0.8s; }
+    
+    .anim-float { animation: float 6s ease-in-out infinite; }
+    .anim-float-delay { animation: float 6s ease-in-out 2s infinite; }
+
+    /* ============ HERO ============ */
+    .hero-section {
+        background: linear-gradient(135deg, #052e16 0%, #14532d 40%, #1e3a5f 100%);
+        position: relative;
+        overflow: hidden;
+    }
+    .hero-section::before {
+        content: '';
+        position: absolute;
+        top: -50%;
+        left: -50%;
+        width: 200%;
+        height: 200%;
+        background: radial-gradient(circle at 30% 50%, rgba(16, 185, 129, 0.15) 0%, transparent 50%);
+        pointer-events: none;
+    }
+    .hero-img-wrapper {
+        position: relative;
+        perspective: 1000px;
+    }
+    .hero-main-img {
+        width: 100%;
+        max-width: 420px;
+        height: 420px;
+        border-radius: 2rem;
+        overflow: hidden;
+        box-shadow: 0 25px 60px rgba(0,0,0,0.4);
+        transform: rotateY(-5deg) rotateX(5deg);
+        transition: transform 0.5s ease;
+        border: 2px solid rgba(255,255,255,0.1);
+    }
+    .hero-img-wrapper:hover .hero-main-img {
+        transform: rotateY(0deg) rotateX(0deg);
+    }
+    .hero-main-img img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+    }
+    .hero-float-img {
+        position: absolute;
+        width: 160px;
+        height: 160px;
+        border-radius: 1.5rem;
+        overflow: hidden;
+        box-shadow: 0 15px 40px rgba(0,0,0,0.3);
+        border: 2px solid rgba(255,255,255,0.1);
+    }
+    .hero-float-img img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+    }
+    .hero-float-1 { top: -20px; right: -30px; z-index: 10; }
+    .hero-float-2 { bottom: 20px; left: -40px; z-index: 5; }
+    .hero-badge {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+        padding: 0.5rem 1rem;
+        border-radius: 9999px;
+        background: linear-gradient(135deg, rgba(16,185,129,0.2), rgba(16,185,129,0.05));
+        border: 1px solid rgba(16,185,129,0.3);
+        backdrop-filter: blur(10px);
+    }
+    .hero-btn-primary {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+        background: linear-gradient(135deg, #16a34a, #15803d);
+        padding: 0.875rem 2rem;
+        border-radius: 0.75rem;
+        color: white;
+        font-weight: 700;
+        font-size: 1rem;
+        box-shadow: 0 10px 25px rgba(22,163,74,0.3);
+        transition: all 0.3s ease;
+    }
+    .hero-btn-primary:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 15px 35px rgba(22,163,74,0.4);
+    }
+    .hero-btn-secondary {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+        padding: 0.875rem 2rem;
+        border-radius: 0.75rem;
+        color: white;
+        font-weight: 600;
+        font-size: 1rem;
+        background: rgba(255,255,255,0.05);
+        border: 1px solid rgba(255,255,255,0.2);
+        backdrop-filter: blur(10px);
+        transition: all 0.3s ease;
+    }
+    .hero-btn-secondary:hover {
+        background: rgba(255,255,255,0.15);
+        border-color: rgba(255,255,255,0.4);
+    }
+    .hero-stat {
+        padding: 1rem 1.25rem;
+        border-radius: 1rem;
+        background: rgba(255,255,255,0.05);
+        border: 1px solid rgba(255,255,255,0.1);
+        backdrop-filter: blur(10px);
+        transition: all 0.3s ease;
+    }
+    .hero-stat:hover {
+        background: rgba(255,255,255,0.1);
+        border-color: rgba(255,255,255,0.2);
+        transform: translateY(-4px);
+    }
+
+    /* ===== MOBILE HERO IMAGES ===== */
+    @media (max-width: 1023px) {
+        .hero-main-img {
+            max-width: 280px;
+            height: 280px;
+            transform: none;
+            border-radius: 1.5rem;
+        }
+        .hero-img-wrapper:hover .hero-main-img {
+            transform: none;
+        }
+        .hero-float-img {
+            width: 100px;
+            height: 100px;
+            border-radius: 1rem;
+        }
+        .hero-float-1 {
+            top: -10px;
+            right: -10px;
+        }
+        .hero-float-2 {
+            bottom: 10px;
+            left: -10px;
+        }
+    }
+    @media (max-width: 639px) {
+        .hero-main-img {
+            max-width: 220px;
+            height: 220px;
+            border-radius: 1.25rem;
+        }
+        .hero-float-img {
+            width: 80px;
+            height: 80px;
+            border-radius: 0.75rem;
+        }
+        .hero-float-1 {
+            top: -8px;
+            right: 0;
+        }
+        .hero-float-2 {
+            bottom: 5px;
+            left: 0;
+        }
+    }
+
+    /* ============ SERVICES ============ */
+    .service-card-modern {
+        background: white;
+        border-radius: 1.5rem;
+        padding: 2rem;
+        border: 1px solid #f3f4f6;
+        transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        position: relative;
+        overflow: hidden;
+    }
+    .service-card-modern::before {
+        content: '';
+        position: absolute;
+        top: 0; left: 0; right: 0;
+        height: 4px;
+        background: #e2e8f0;
+        transition: height 0.4s ease;
+    }
+    .service-card-modern.green:hover::before { background: #22c55e; height: 4px; }
+    .service-card-modern.blue:hover::before { background: #3b82f6; height: 4px; }
+    .service-card-modern.gray:hover::before { background: #64748b; height: 4px; }
+    .service-card-modern:hover {
+        transform: translateY(-8px);
+        box-shadow: 0 20px 40px rgba(0,0,0,0.08);
+        border-color: transparent;
+    }
+    .service-icon-modern {
+        width: 4rem;
+        height: 4rem;
+        border-radius: 1rem;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin-bottom: 1.5rem;
+        transition: transform 0.3s ease;
+    }
+    .service-card-modern:hover .service-icon-modern {
+        transform: scale(1.1);
+    }
+
+    /* ============ PRODUITS ============ */
+    .section-badge {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+        padding: 0.5rem 1.25rem;
+        background: #f0fdf4;
+        color: #166534;
+        border-radius: 9999px;
+        font-size: 0.8rem;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+
+<!-- ============ HERO ============ -->
+<section class="hero-section py-16 lg:py-32 relative">
+    <div class="max-w-7xl mx-auto px-4 relative z-10">
+        <div class="grid lg:grid-cols-2 gap-10 lg:gap-16 items-center">
+            <!-- Images — AFFICHÉES EN PREMIER SUR MOBILE -->
+            <div class="flex justify-center lg:order-2 anim-fade-up anim-delay-2 order-1">
+                <div class="hero-img-wrapper relative">
+                    <!-- Image principale -->
+                    <div class="hero-main-img anim-float">
+                        <img src="{% static 'images/alfred.png' %}" alt="Produits frais">
+                    </div>
+                    
+                    <!-- Flottante 1 -->
+                    <div class="hero-float-img hero-float-1 anim-float">
+                        <img src="{% static 'images/alfred11.png' %}" alt="Fruits">
+                    </div>
+                    
+                    <!-- Flottante 2 -->
+                    <div class="hero-float-img hero-float-2 anim-float-delay">
+                        <img src="{% static 'images/alfred12.png' %}" alt="Légumes">
+                    </div>
+                </div>
+            </div>
+
+            <!-- Texte -->
+            <div class="lg:order-1 order-2">
+                <div class="hero-badge anim-fade-up mb-6">
+                    <span class="w-2 h-2 bg-emerald-400 rounded-full animate-pulse"></span>
+                    <span class="text-sm font-medium text-emerald-300 tracking-wide">Plateforme #1 au Togo</span>
+                </div>
+
+                <h1 class="text-4xl md:text-5xl lg:text-6xl font-extrabold text-white leading-[1.1] tracking-tight anim-fade-up anim-delay-1" style="font-family:'Outfit',sans-serif">
+                    Achetez frais,<br>
+                    <span class="bg-gradient-to-r from-emerald-400 via-green-300 to-teal-400 bg-clip-text text-transparent">livrés chez vous.</span>
+                </h1>
+
+                <p class="text-lg text-gray-300/80 max-w-lg leading-relaxed mt-6 anim-fade-up anim-delay-2">
+                    Produits agricoles locaux, pressing premium et fibre optique. Simplifiez votre quotidien avec DK-PRESS.
+                </p>
+
+                <div class="flex flex-wrap gap-4 mt-8 anim-fade-up anim-delay-3">
+                    <a href="{% url 'shop:catalog' %}" class="hero-btn-primary">
+                        <i class="fas fa-shopping-bag"></i> Explorer la boutique
+                    </a>
+                    <a href="{% url 'fai:offers' %}" class="hero-btn-secondary">
+                        <i class="fas fa-bolt"></i> Voir internet
+                    </a>
+                </div>
+
+                <!-- Stats -->
+                <div class="grid grid-cols-3 gap-3 sm:gap-4 mt-10 anim-fade-up anim-delay-4">
+                    <div class="hero-stat">
+                        <p class="text-2xl sm:text-3xl font-extrabold text-white" style="font-family:'Outfit',sans-serif">500+</p>
+                        <p class="text-xs text-gray-400 mt-1">Produits frais</p>
+                    </div>
+                    <div class="hero-stat">
+                        <p class="text-2xl sm:text-3xl font-extrabold text-white" style="font-family:'Outfit',sans-serif">2K+</p>
+                        <p class="text-xs text-gray-400 mt-1">Clients actifs</p>
+                    </div>
+                    <div class="hero-stat">
+                        <p class="text-2xl sm:text-3xl font-extrabold text-emerald-400" style="font-family:'Outfit',sans-serif">99%</p>
+                        <p class="text-xs text-gray-400 mt-1">Satisfaction</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Séparateur vague -->
+    <div class="absolute bottom-0 left-0 right-0 z-20">
+        <svg viewBox="0 0 1440 60" fill="none" xmlns="http://www.w3.org/2000/svg" class="w-full block">
+            <path d="M0 60V20C240 0 480 40 720 30C960 20 1200 0 1440 20V60H0Z" fill="#F9FAFB"/>
+        </svg>
+    </div>
+</section>
+
+<!-- ============ SECTION PUBLICITAIRE ============ -->
+<section class="py-16 bg-gray-50">
+    <div class="max-w-7xl mx-auto px-4">
+        <!-- Titre optionnel (tu peux le commenter si tu n'en veux pas) -->
+        <div class="text-center mb-8">
+            <h2 class="text-2xl md:text-3xl font-bold text-gray-900" style="font-family:'Outfit',sans-serif">
+                Offres spéciales
+            </h2>
+            <p class="text-gray-500 text-sm mt-2">Profitez de nos promotions exclusives</p>
+        </div>
+
+        <!-- Grille publicitaire : 2 colonnes sur mobile, 3 sur desktop -->
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+            
+            <!-- Bannière 1 -->
+            <a href="#" class="group block rounded-2xl overflow-hidden shadow-sm hover:shadow-md transition-shadow">
+                <div class="relative aspect-[4/3] bg-gradient-to-br from-emerald-100 to-emerald-200">
+                    <!-- Remplacer le placeholder par ta propre image -->
+                    <img src="{% static 'images/dk6.jpeg' %}" 
+                         alt="Promotion 1" 
+                         class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                         onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+                    <!-- Fallback si l'image n'existe pas -->
+                    <div class="absolute inset-0 hidden items-center justify-center bg-emerald-50 text-emerald-800">
+                        <div class="text-center">
+                            <i class="fas fa-tag text-4xl mb-2"></i>
+                            <p class="font-semibold">Promotion 1</p>
+                            <p class="text-sm">-20% sur tout</p>
+                        </div>
+                    </div>
+                </div>
+            </a>
+
+            <!-- Bannière 2 -->
+            <a href="#" class="group block rounded-2xl overflow-hidden shadow-sm hover:shadow-md transition-shadow">
+                <div class="relative aspect-[4/3] bg-gradient-to-br from-blue-100 to-blue-200">
+                    <img src="{% static 'images/dk12.png' %}" 
+                         alt="Promotion 2" 
+                         class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                         onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+                    <div class="absolute inset-0 hidden items-center justify-center bg-blue-50 text-blue-800">
+                        <div class="text-center">
+                            <i class="fas fa-gem text-4xl mb-2"></i>
+                            <p class="font-semibold">Nouveautés</p>
+                            <p class="text-sm">Découvrez nos produits</p>
+                        </div>
+                    </div>
+                </div>
+            </a>
+
+            <!-- Bannière 3 -->
+            <a href="#" class="group block rounded-2xl overflow-hidden shadow-sm hover:shadow-md transition-shadow sm:col-span-2 lg:col-span-1">
+                <div class="relative aspect-[4/3] lg:aspect-[4/3] bg-gradient-to-br from-amber-100 to-amber-200">
+                    <img src="{% static 'images/dk13.png' %}" 
+                         alt="Promotion 3" 
+                         class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                         onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+                    <div class="absolute inset-0 hidden items-center justify-center bg-amber-50 text-amber-800">
+                        <div class="text-center">
+                            <i class="fas fa-truck text-4xl mb-2"></i>
+                            <p class="font-semibold">Livraison gratuite</p>
+                            <p class="text-sm">Dès 5000 FCFA</p>
+                        </div>
+                    </div>
+                </div>
+            </a>
+
+        </div>
+    </div>
+</section>
+<!-- ============ SERVICES ============ -->
+<section class="py-20 bg-gray-50">
+    <div class="max-w-7xl mx-auto px-4">
+        <div class="text-center mb-14">
+            <div class="section-badge mx-auto w-fit mb-4">NOS SERVICES</div>
+            <h2 class="text-3xl md:text-4xl font-extrabold text-gray-900 mt-2" style="font-family:'Outfit',sans-serif">
+                Une plateforme, trois solutions
+            </h2>
+            <p class="text-gray-500 mt-3 max-w-xl mx-auto text-lg">
+                Centralisez vos achats, votre pressing et votre internet au même endroit.
+            </p>
+        </div>
+
+        <div class="grid md:grid-cols-3 gap-8">
+            <!-- Boutique -->
+            <a href="{% url 'shop:catalog' %}" class="service-card-modern green">
+                <div class="service-icon-modern bg-emerald-50">
+                    <img src="{% static 'images/dk12.png' %}" alt="Boutique" class="w-10 h-10 rounded-lg object-cover">
+                </div>
+                <h3 class="text-xl font-bold text-gray-900 mb-2">Boutique Agricole</h3>
+                <p class="text-sm text-gray-500 leading-relaxed mb-5">
+                    Produits frais, locaux et écologiques directement des producteurs togolais. Fruits, légumes, céréales et plus.
+                </p>
+                <div class="flex items-center gap-2 text-emerald-600 font-bold text-sm group-hover:gap-3 transition-all">
+                    Commander <i class="fas fa-arrow-right text-xs transition-transform group-hover:translate-x-1"></i>
+                </div>
+            </a>
+
+            <!-- Pressing -->
+            <a href="{% url 'pressing:services' %}" class="service-card-modern blue">
+                <div class="service-icon-modern bg-blue-50">
+                    <img src="{% static 'images/dk6.jpeg' %}" alt="Pressing" class="w-10 h-10 rounded-lg object-cover">
+                </div>
+                <h3 class="text-xl font-bold text-gray-900 mb-2">Pressing Premium</h3>
+                <p class="text-sm text-gray-500 leading-relaxed mb-5">
+                    Lavage, repassage et nettoyage à sec de haute qualité. Prise en charge et livraison à domicile.
+                </p>
+                <div class="flex items-center gap-2 text-blue-600 font-bold text-sm group-hover:gap-3 transition-all">
+                    Commander <i class="fas fa-arrow-right text-xs transition-transform group-hover:translate-x-1"></i>
+                </div>
+            </a>
+
+            <!-- Internet -->
+            <a href="{% url 'fai:offers' %}" class="service-card-modern gray">
+                <div class="service-icon-modern bg-gray-100">
+                    <img src="{% static 'images/alfred12.png' %}" alt="Internet" class="w-10 h-10 rounded-lg object-cover">
+                </div>
+                <h3 class="text-xl font-bold text-gray-900 mb-2">Internet FTTH</h3>
+                <p class="text-sm text-gray-500 leading-relaxed mb-5">
+                    Fibre optique ultra-rapide, tickets data et activation automatique. Support technique 24/7.
+                </p>
+                <div class="flex items-center gap-2 text-gray-700 font-bold text-sm group-hover:gap-3 transition-all">
+                    Voir offres <i class="fas fa-arrow-right text-xs transition-transform group-hover:translate-x-1"></i>
+                </div>
+            </a>
+        </div>
+    </div>
+</section>
+
+
+<!-- ============ PRODUITS POPULAIRES ============ -->
+<section class="py-20 bg-white">
+    <div class="max-w-7xl mx-auto px-4">
+        <div class="flex flex-col sm:flex-row sm:items-end justify-between gap-4 mb-10">
+            <div>
+                <div class="section-badge w-fit mb-3">ECOMMERCE</div>
+                <h2 class="text-3xl font-extrabold text-gray-900" style="font-family:'Outfit',sans-serif">Produits populaires</h2>
+            </div>
+            <a href="{% url 'shop:catalog' %}" class="hidden sm:inline-flex items-center gap-2 text-sm font-bold text-emerald-600 hover:text-emerald-700 bg-emerald-50 px-5 py-2.5 rounded-xl transition">
+                Tout voir <i class="fas fa-arrow-right text-xs"></i>
+            </a>
+        </div>
+
+        {% if featured_products %}
+        <!-- Correction de l'erreur de syntaxe : class au lieu de cla\nss -->
+        <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-5 md:gap-6">
+            {% for product in featured_products %}
+                {% include 'components/product_card.html' %}
+            {% endfor %}
+        </div>
+        {% else %}
+        <div class="text-center py-20 bg-gray-50 rounded-2xl border border-gray-100">
+            <img src="{% static 'images/4.png' %}" alt="" class="w-24 h-24 rounded-2xl mx-auto mb-4 opacity-30 object-cover">
+            <h3 class="text-lg font-bold text-gray-700 mb-1">Bientôt disponibles</h3>
+            <p class="text-sm text-gray-400 mb-4">Nos produits arrivent sur la plateforme !</p>
+            <a href="{% url 'shop:catalog' %}" class="inline-flex items-center gap-2 bg-emerald-600 text-white px-6 py-2.5 rounded-xl font-semibold hover:bg-emerald-700 transition">
+                <i class="fas fa-bell"></i> Me notifier
+            </a>
+        </div>
+        {% endif %}
+
+        <div class="sm:hidden mt-8 text-center">
+            <a href="{% url 'shop:catalog' %}" class="inline-flex items-center justify-center gap-2 w-full max-w-xs mx-auto bg-emerald-600 text-white px-6 py-3 rounded-xl font-semibold hover:bg-emerald-700 transition">
+                Voir tous les produits
+            </a>
+        </div>
+    </div>
+</section>
+{% endblock %}

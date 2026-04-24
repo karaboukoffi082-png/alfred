@@ -1,0 +1,81 @@
+/* ============ BOUTIQUE SPÉCIFIQUE ============ */
+.product-card .product-actions {
+    opacity: 0;
+    transform: translateY(8px);
+    transition: all 0.3s ease;
+}
+.product-card:hover .product-actions {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+/* Grille/Liste toggle */
+.grid-view .product-card { /* default grid behavior */ }
+
+.list-view .product-card {
+    display: flex;
+    flex-direction: row;
+}
+.list-view .product-card .product-image {
+    width: 160px;
+    height: 160px;
+    flex-shrink: 0;
+}
+.list-view .product-card .product-info {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+/* Filtre actif */
+.filter-tag {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 4px 12px;
+    border-radius: 9999px;
+    font-size: 12px;
+    font-weight: 500;
+    background: #ECFDF5;
+    color: #065F46;
+}
+.filter-tag button {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 16px;
+    height: 16px;
+    border-radius: 50%;
+    border: none;
+    background: rgba(6,95,70,0.15);
+    color: #065F46;
+    cursor: pointer;
+    font-size: 10px;
+}
+.filter-tag button:hover { background: #065F46; color: white; }
+
+/* Prix barré animé */
+.price-old {
+    position: relative;
+    color: #9CA3AF;
+}
+.price-old::after {
+    content: '';
+    position: absolute;
+    left: -2px;
+    right: -2px;
+    top: 50%;
+    height: 1.5px;
+    background: #EF4444;
+    transform: rotate(-8deg);
+}
+
+/* Étoiles note */
+.star-rating .star {
+    cursor: pointer;
+    transition: transform 0.15s ease;
+}
+.star-rating .star:hover {
+    transform: scale(1.2);
+}

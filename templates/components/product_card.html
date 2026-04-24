@@ -1,0 +1,114 @@
+{% load humanize %}
+{% load static %}
+
+<article class="bg-white rounded-xl border border-gray-100 overflow-hidden hover:shadow-lg transition-all duration-300 flex flex-col h-full">
+
+    <!-- IMAGE PRODUIT -->
+    <div class="relative overflow-hidden aspect-square bg-gray-100">
+        <a href="{{ product.get_absolute_url }}" class="block w-full h-full">
+            {% if product.image %}
+                <img src="{{ product.image.url }}" alt="{{ product.name }}" loading="lazy"
+                     class="w-full h-full object-cover hover:scale-105 transition-transform duration-500">
+            {% else %}
+                <div class="w-full h-full flex items-center justify-center text-gray-300">
+                    <i class="fas fa-image text-4xl"></i>
+                </div>
+            {% endif %}
+        </a>
+
+        <!-- BADGES -->
+        <div class="absolute top-3 left-3 flex flex-col gap-1.5 z-10">
+            {% if product.discount_percent > 0 %}
+                <span class="bg-red-500 text-white text-[11px] font-bold px-2 py-0.5 rounded-md">
+                    -{{ product.discount_percent }}%
+                </span>
+            {% endif %}
+            {% if product.is_organic %}
+                <span class="bg-green-600 text-white text-[11px] font-bold px-2 py-0.5 rounded-md">
+                    Bio
+                </span>
+            {% endif %}
+            {% if not product.in_stock %}
+                <span class="bg-gray-800 text-white text-[11px] font-bold px-2 py-0.5 rounded-md">
+                    Rupture
+                </span>
+            {% endif %}
+        </div>
+
+        <!-- BOUTONS D'ACTION (toujours visibles, en bas à droite de l'image) -->
+        <div class="absolute bottom-3 right-3 flex flex-col gap-2 z-10">
+            <!-- Bouton Ajouter au panier -->
+            <button type="button"
+                    onclick="addToCart({{ product.id }})"
+                    class="w-9 h-9 bg-gray-900 text-white rounded-lg flex items-center justify-center hover:bg-emerald-600 transition shadow-md {% if not product.in_stock %}opacity-50 pointer-events-none{% endif %}"
+                    title="Ajouter au panier"
+                    {% if not product.in_stock %}disabled{% endif %}>
+                <i class="fas fa-cart-plus text-sm"></i>
+            </button>
+            <!-- Bouton Voir détails -->
+            <a href="{{ product.get_absolute_url }}"
+               class="w-9 h-9 bg-white text-gray-700 rounded-lg flex items-center justify-center hover:bg-gray-100 transition shadow-md border border-gray-200"
+               title="Voir détails">
+                <i class="fas fa-eye text-sm"></i>
+            </a>
+        </div>
+    </div>
+
+    <!-- INFOS PRODUIT -->
+    <div class="p-3.5 flex-1 flex flex-col">
+        <span class="text-[11px] text-gray-400 uppercase tracking-wider font-medium">
+            {{ product.category.name }}
+        </span>
+        <a href="{{ product.get_absolute_url }}" class="block mt-1">
+            <h3 class="text-sm font-semibold text-gray-900 line-clamp-2 hover:text-emerald-600 transition leading-snug">
+                {{ product.name }}
+            </h3>
+        </a>
+
+        <!-- NOTE -->
+        {% if product.review_count > 0 %}
+        <div class="flex items-center gap-1.5 mt-2">
+            <div class="flex items-center gap-0.5">
+                {% for i in "12345" %}
+                    {% if forloop.counter <= product.rating_avg|floatformat:0|add:"0" %}
+                        <i class="fas fa-star text-amber-400 text-[10px]"></i>
+                    {% else %}
+                        <i class="far fa-star text-gray-300 text-[10px]"></i>
+                    {% endif %}
+                {% endfor %}
+            </div>
+            <span class="text-[11px] text-gray-400">({{ product.review_count }})</span>
+        </div>
+        {% endif %}
+
+        <!-- PRIX -->
+        <div class="flex items-end gap-2 mt-2.5">
+            <span class="text-lg font-bold text-gray-900">
+                {{ product.price|intcomma }}
+                <span class="text-xs font-normal text-gray-400">FCFA</span>
+            </span>
+            {% if product.old_price and product.old_price > product.price %}
+                <span class="text-sm text-gray-400 line-through">
+                    {{ product.old_price|intcomma }}
+                </span>
+            {% endif %}
+        </div>
+
+        <!-- UNITÉ -->
+        <span class="inline-block mt-1.5 text-[11px] text-gray-400 bg-gray-50 px-2 py-0.5 rounded">
+            / {{ product.get_unit_display }}
+        </span>
+
+        <!-- BOUTON AJOUTER (pleine largeur, visible uniquement sur mobile) -->
+        <button type="button"
+                onclick="addToCart({{ product.id }})"
+                class="mt-3 w-full py-2 bg-emerald-600 text-white text-sm font-medium rounded-lg hover:bg-emerald-700 active:scale-[0.98] transition md:hidden {% if not product.in_stock %}opacity-50 pointer-events-none{% endif %}"
+                {% if not product.in_stock %}disabled{% endif %}>
+            {% if product.in_stock %}
+                <i class="fas fa-cart-plus mr-1"></i> Ajouter
+            {% else %}
+                Indisponible
+            {% endif %}
+        </button>
+    </div>
+</article>

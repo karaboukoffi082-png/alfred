@@ -1,0 +1,141 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load humanize %}
+
+{% block title %}Panier{% endblock %}
+
+{% block content %}
+<div class="max-w-5xl mx-auto px-4 py-8">
+    <nav class="text-sm text-gray-400 mb-6">
+        <a href="{% url 'pages:home' %}" class="hover:text-gray-600 transition">Accueil</a>
+        <i class="fas fa-chevron-right text-[10px] mx-2"></i>
+        <span class="text-gray-900 font-medium">Panier</span>
+    </nav>
+
+    <h1 class="text-2xl font-bold text-gray-900 mb-6" style="font-family:'Outfit',sans-serif">
+        <i class="fas fa-shopping-cart text-gray-400 mr-2"></i>Mon panier
+        {% if cart_count %}<span class="text-lg font-normal text-gray-400">({{ cart_count }} article{{ cart_count|pluralize }})</span>{% endif %}
+    </h1>
+
+    {% if cart_items %}
+    <div class="grid lg:grid-cols-3 gap-8">
+        <!-- Liste des articles -->
+        <div class="lg:col-span-2 space-y-4">
+            {% for item in cart_items %}
+            <div class="bg-white rounded-xl border border-gray-100 p-4 flex gap-4" id="cartItem-{{ item.product.id }}">
+                <div class="w-20 h-20 rounded-lg overflow-hidden bg-gray-100 flex-shrink-0">
+                    {% if item.product.image %}
+                    <img src="{{ item.product.image.url }}" alt="{{ item.product.name }}" class="w-full h-full object-cover">
+                    {% else %}
+                    <div class="w-full h-full flex items-center justify-center text-gray-300"><i class="fas fa-image"></i></div>
+                    {% endif %}
+                </div>
+                <div class="flex-1 min-w-0">
+                    <a href="{{ item.product.get_absolute_url }}" class="text-sm font-semibold text-gray-900 hover:text-green-600 transition line-clamp-2">{{ item.product.name }}</a>
+                    <p class="text-xs text-gray-400 mt-0.5">{{ item.product.get_unit_display }} — {{ item.product.price|intcomma }} FCFA</p>
+                    <div class="flex items-center justify-between mt-3">
+                        <div class="flex items-center border border-gray-200 rounded-lg overflow-hidden">
+                            <button onclick="updateCartQty({{ item.product.id }}, {{ item.quantity }} - 1)" class="w-8 h-8 flex items-center justify-center text-gray-500 hover:bg-gray-50 transition">
+                                <i class="fas fa-minus text-xs"></i>
+                            </button>
+                            <span class="w-10 h-8 flex items-center justify-center text-sm font-semibold border-x border-gray-200">{{ item.quantity }}</span>
+                            <button onclick="updateCartQty({{ item.product.id }}, {{ item.quantity }} + 1)" class="w-8 h-8 flex items-center justify-center text-gray-500 hover:bg-gray-50 transition">
+                                <i class="fas fa-plus text-xs"></i>
+                            </button>
+                        </div>
+                        <div class="flex items-center gap-3">
+                            <span class="text-sm font-bold text-gray-900">{{ item.subtotal|intcomma }} FCFA</span>
+                            <button onclick="removeFromCart({{ item.product.id }})" class="w-8 h-8 rounded-lg hover:bg-red-50 flex items-center justify-center text-gray-400 hover:text-red-500 transition" title="Supprimer">
+                                <i class="fas fa-trash-alt text-xs"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+
+        <!-- Récapitulatif -->
+        <div class="lg:col-span-1">
+            <div class="bg-white rounded-xl border border-gray-100 p-6 sticky top-24">
+                <h3 class="font-bold text-gray-900 mb-4">Récapitulatif</h3>
+                <div class="space-y-3 text-sm">
+                    <div class="flex justify-between text-gray-600">
+                        <span>Sous-total</span>
+                        <span class="font-medium">{{ cart_subtotal|intcomma }} FCFA</span>
+                    </div>
+                    <div class="flex justify-between text-gray-600">
+                        <span>Livraison</span>
+                        <span class="font-medium">{{ delivery_fee|intcomma }} FCFA</span>
+                    </div>
+                    <div class="border-t border-gray-100 pt-3 flex justify-between text-gray-900">
+                        <span class="font-bold text-base">Total</span>
+                        <span class="font-bold text-lg" style="font-family:'Outfit',sans-serif">{{ cart_total|intcomma }} FCFA</span>
+                    </div>
+                </div>
+                <a href="{% url 'shop:checkout' %}" class="block mt-5 w-full bg-green-600 text-white py-3 rounded-xl font-semibold text-center hover:bg-green-700 active:scale-[0.98] transition-all">
+                    <i class="fas fa-lock mr-1.5"></i> Passer la commande
+                </a>
+                <a href="{% url 'shop:catalog' %}" class="block mt-3 text-center text-sm text-gray-500 hover:text-gray-900 transition">
+                    <i class="fas fa-arrow-left mr-1"></i> Continuer mes achats
+                </a>
+            </div>
+        </div>
+    </div>
+
+    {% else %}
+    <div class="bg-white rounded-2xl border border-gray-100 p-16 text-center">
+        <div class="w-20 h-20 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-4">
+            <i class="fas fa-shopping-cart text-3xl text-gray-300"></i>
+        </div>
+        <h2 class="text-xl font-bold text-gray-900 mb-2">Votre panier est vide</h2>
+        <p class="text-sm text-gray-500 mb-6">Parcourez notre boutique et ajoutez des produits.</p>
+        <a href="{% url 'shop:catalog' %}" class="inline-flex items-center gap-2 bg-gray-900 text-white px-6 py-3 rounded-xl font-semibold hover:bg-gray-800 transition">
+            <i class="fas fa-shopping-bag"></i> Voir la boutique
+        </a>
+    </div>
+    {% endif %}
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+function updateCartQty(productId, newQty) {
+    if (newQty < 1) {
+        removeFromCart(productId);
+        return;
+    }
+    fetch("{% url 'shop:update_cart' %}", {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/x-www-form-urlencoded',
+            'X-CSRFToken': '{{ csrf_token }}'
+        },
+        body: `product_id=${productId}&quantity=${newQty}`
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            location.reload();
+        }
+    });
+}
+
+function removeFromCart(productId) {
+    fetch("{% url 'shop:remove_from_cart' %}", {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/x-www-form-urlencoded',
+            'X-CSRFToken': '{{ csrf_token }}'
+        },
+        body: `product_id=${productId}`
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            location.reload();
+        }
+    });
+}
+</script>
+{% endblock %}

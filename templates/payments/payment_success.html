@@ -1,0 +1,53 @@
+{% extends 'base.html' %}
+{% load humanize %}
+
+{% block title %}Paiement réussi{% endblock %}
+
+{% block extra_css %}{% endblock %}
+
+{% block content %}
+<div class="max-w-lg mx-auto px-4 py-16 text-center">
+    <div class="relative inline-block mb-6">
+        <div class="w-24 h-24 bg-green-50 rounded-full flex items-center justify-center">
+            <i class="fas fa-check text-4xl text-green-600"></i>
+        </div>
+        <div class="absolute -top-2 -right-2 w-10 h-10 bg-green-500 rounded-full flex items-center justify-center">
+            <i class="fas fa-party-horn text-white text-sm"></i>
+        </div>
+    </div>
+    <h1 class="text-3xl font-bold text-gray-900 mb-3" style="font-family:'Outfit',sans-serif">Paiement réussi !</h1>
+    <p class="text-gray-500 mb-8">Votre paiement a été confirmé avec succès. Merci pour votre confiance.</p>
+
+    {% if payment %}
+    <div class="bg-white rounded-2xl border border-gray-100 p-6 text-left mb-8">
+        <div class="space-y-3 text-sm">
+            <div class="flex justify-between">
+                <span class="text-gray-500">Référence</span>
+                <span class="font-semibold text-gray-900">PAY-{{ payment.payment_id }}</span>
+            </div>
+            <div class="flex justify-between">
+                <span class="text-gray-500">Montant</span>
+                <span class="font-semibold text-gray-900">{{ payment.amount|intcomma }} FCFA</span>
+            </div>
+            <div class="flex justify-between">
+                <span class="text-gray-500">Méthode</span>
+                <span class="font-medium text-gray-700">{{ payment.get_method_display }} — {{ payment.get_operator_display }}</span>
+            </div>
+            <div class="flex justify-between">
+                <span class="text-gray-500">Date</span>
+                <span class="text-gray-700">{{ payment.paid_at|date:"d/m/Y à H:i" }}</span>
+            </div>
+        </div>
+    </div>
+    {% endif %}
+
+    <div class="flex flex-col sm:flex-row gap-3 justify-center">
+        <a href="{% url 'users:dashboard' %}" class="bg-gray-900 text-white px-6 py-3 rounded-xl font-semibold hover:bg-gray-800 transition">
+            <i class="fas fa-th-large mr-1.5"></i> Tableau de bord
+        </a>
+        <a href="{% url 'shop:catalog' %}" class="border border-gray-200 text-gray-700 px-6 py-3 rounded-xl font-semibold hover:bg-gray-50 transition">
+            Continuer mes achats
+        </a>
+    </div>
+</div>
+{% endblock %}

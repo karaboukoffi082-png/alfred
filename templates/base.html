@@ -1,0 +1,333 @@
+{% load static %}
+{% load humanize %}
+
+<!DOCTYPE html>
+<html lang="fr" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes">
+    <meta name="description" content="DK-PRESS : Boutique agricole, Pressing en ligne, Internet FTTH - Votre plateforme multi-services à Lomé, Togo">
+    <title>{% block title %}DK-PRESS{% endblock %} | Plateforme Multi-Services</title>
+
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Outfit:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+    
+    <!-- Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- CSS Global -->
+    <link rel="stylesheet" href="{% static 'css/global.css' %}">
+    {% block extra_css %}{% endblock %}
+</head>
+<body class="bg-gray-50 text-gray-900 font-sans antialiased">
+
+    <!-- ========== HEADER ========== -->
+    <header class="sticky top-0 z-50 bg-white shadow-sm border-b border-gray-100">
+        <!-- Barre supérieure (desktop uniquement) -->
+        <div class="bg-emerald-800 text-emerald-100 text-xs py-1.5 hidden md:block">
+            <div class="max-w-7xl mx-auto px-4 flex justify-between items-center">
+                <div class="flex items-center gap-4">
+                    <span><i class="fas fa-phone-alt mr-1"></i>79 01 73 84</span>
+                    <span><i class="fab fa-whatsapp mr-1"></i>90 89 98 14</span>
+                    <span><i class="fas fa-envelope mr-1"></i>divakoboyo@gmail.com</span>
+                </div>
+                <div class="flex items-center gap-4">
+                    <a href="{% url 'pages:about' %}" class="hover:text-white transition">À propos</a>
+                    <a href="{% url 'pages:faq' %}" class="hover:text-white transition">FAQ</a>
+                    <a href="{% url 'pages:contact' %}" class="hover:text-white transition">Contact</a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Barre principale -->
+        <div class="max-w-7xl mx-auto px-4 py-3">
+            <div class="flex items-center justify-between gap-3">
+                <!-- Logo -->
+                <a href="{% url 'pages:home' %}" class="flex items-center gap-2 flex-shrink-0">
+                    <div class="w-10 h-10 bg-emerald-600 rounded-lg flex items-center justify-center">
+                        <span class="text-white font-bold text-lg" style="font-family:'Outfit',sans-serif">DK</span>
+                    </div>
+                    <div class="hidden sm:block">
+                        <span class="text-xl font-bold text-gray-900" style="font-family:'Outfit',sans-serif">DK-PRESS</span>
+                        <span class="block text-[10px] text-gray-400 -mt-1 tracking-widest uppercase">Multi-Services</span>
+                    </div>
+                </a>
+
+                <!-- Recherche desktop -->
+                <form action="{% url 'shop:catalog' %}" method="get" class="hidden md:flex flex-1 max-w-xl">
+                    <div class="flex w-full border border-emerald-200 rounded-lg overflow-hidden focus-within:ring-2 focus-within:ring-emerald-500 focus-within:border-transparent transition bg-white">
+                        <input type="text" name="q" placeholder="Rechercher produits, services..." class="flex-1 px-4 py-2.5 text-sm outline-none bg-gray-50">
+                        <button type="submit" class="bg-emerald-600 text-white px-5 hover:bg-emerald-700 transition">
+                            <i class="fas fa-search text-sm"></i>
+                        </button>
+                    </div>
+                </form>
+
+                <!-- Actions (icônes) -->
+                <div class="flex items-center gap-1 sm:gap-2">
+                    <!-- Bouton recherche mobile -->
+                    <button id="mobileSearchToggle" class="md:hidden w-10 h-10 rounded-lg hover:bg-emerald-50 flex items-center justify-center transition">
+                        <i class="fas fa-search text-emerald-600"></i>
+                    </button>
+
+                    <!-- Menu burger mobile (liens principaux) -->
+                    <button id="mobileMenuToggle" class="lg:hidden w-10 h-10 rounded-lg hover:bg-emerald-50 flex items-center justify-center transition">
+                        <i class="fas fa-bars text-gray-600"></i>
+                    </button>
+
+                    <!-- Liens desktop (Boutique, Pressing, Internet) -->
+                    <a href="{% url 'shop:catalog' %}" class="hidden lg:flex items-center gap-1.5 px-3 py-2 rounded-lg hover:bg-emerald-50 text-gray-600 hover:text-emerald-700 transition text-sm font-medium">
+                        <i class="fas fa-store"></i>
+                        <span>Boutique</span>
+                    </a>
+                    <a href="{% url 'pressing:services' %}" class="hidden lg:flex items-center gap-1.5 px-3 py-2 rounded-lg hover:bg-blue-50 text-gray-600 hover:text-blue-700 transition text-sm font-medium">
+                        <i class="fas fa-shirt"></i>
+                        <span>Pressing</span>
+                    </a>
+                    <a href="{% url 'fai:offers' %}" class="hidden lg:flex items-center gap-1.5 px-3 py-2 rounded-lg hover:bg-gray-100 text-gray-600 hover:text-gray-900 transition text-sm font-medium">
+                        <i class="fas fa-wifi"></i>
+                        <span>Internet</span>
+                    </a>
+
+                    <!-- Panier -->
+                    <a href="{% url 'shop:cart' %}" class="relative w-10 h-10 rounded-lg hover:bg-emerald-50 flex items-center justify-center transition">
+                        <i class="fas fa-shopping-cart text-gray-600"></i>
+                        <span id="cartBadge" class="absolute -top-1 -right-1 bg-emerald-600 text-white text-[10px] font-bold w-5 h-5 rounded-full flex items-center justify-center hidden">0</span>
+                    </a>
+
+                    <!-- Notifications -->
+                    <button id="notifToggle" class="relative w-10 h-10 rounded-lg hover:bg-emerald-50 flex items-center justify-center transition">
+                        <i class="fas fa-bell text-gray-600"></i>
+                        <span id="notifBadge" class="absolute -top-1 -right-1 bg-red-500 text-white text-[10px] font-bold w-5 h-5 rounded-full flex items-center justify-center hidden">0</span>
+                    </button>
+
+                    <!-- Chat -->
+                    {% if user.is_authenticated %}
+                    <a href="{% url 'chat:inbox' %}" class="relative w-10 h-10 rounded-lg hover:bg-emerald-50 flex items-center justify-center transition">
+                        <i class="fas fa-comment-dots text-gray-600"></i>
+                    </a>
+                    {% endif %}
+
+                    <!-- Compte utilisateur -->
+                    {% if user.is_authenticated %}
+                    <div class="relative">
+                        <button id="userMenuToggle" class="flex items-center gap-2 px-2 py-1.5 rounded-lg hover:bg-emerald-50 transition">
+                            <div class="w-8 h-8 rounded-full bg-emerald-600 text-white flex items-center justify-center text-sm font-bold">
+                                {{ user.first_name.0|default:user.username.0|upper }}
+                            </div>
+                            <span class="hidden sm:block text-sm font-medium text-gray-700 max-w-[100px] truncate">
+                                {{ user.first_name|default:user.username }}
+                            </span>
+                            <i class="fas fa-chevron-down text-xs text-gray-400 hidden sm:block"></i>
+                        </button>
+                        <!-- Menu déroulant utilisateur -->
+                        <div id="userMenu" class="hidden absolute right-0 top-full mt-1 w-56 bg-white rounded-xl shadow-xl border border-gray-100 py-2 z-50">
+                            <div class="px-4 py-2 border-b border-gray-100">
+                                <p class="text-sm font-semibold text-gray-900 truncate">{{ user.get_full_name|default:user.username }}</p>
+                                <p class="text-xs text-gray-500 truncate">{{ user.email }}</p>
+                            </div>
+                            <a href="{% url 'users:dashboard' %}" class="flex items-center gap-3 px-4 py-2.5 text-sm text-gray-700 hover:bg-emerald-50 transition">
+                                <i class="fas fa-th-large w-4 text-emerald-500"></i> Tableau de bord
+                            </a>
+                            <a href="{% url 'users:profile' %}" class="flex items-center gap-3 px-4 py-2.5 text-sm text-gray-700 hover:bg-emerald-50 transition">
+                                <i class="fas fa-user w-4 text-emerald-500"></i> Mon profil
+                            </a>
+                            <a href="#" class="flex items-center gap-3 px-4 py-2.5 text-sm text-gray-700 hover:bg-emerald-50 transition">
+                                <i class="fas fa-box w-4 text-emerald-500"></i> Mes commandes
+                            </a>
+                            <a href="{% url 'fai:my_subscriptions' %}" class="flex items-center gap-3 px-4 py-2.5 text-sm text-gray-700 hover:bg-emerald-50 transition">
+                                <i class="fas fa-wifi w-4 text-emerald-500"></i> Mes abonnements
+                            </a>
+                            <a href="{% url 'pressing:tracking' %}" class="flex items-center gap-3 px-4 py-2.5 text-sm text-gray-700 hover:bg-blue-50 transition">
+                                <i class="fas fa-shirt w-4 text-blue-500"></i> Pressing
+                            </a>
+                            {% if user.is_admin_user %}
+                            <div class="border-t border-gray-100 mt-1 pt-1">
+                                <a href="/admin/" class="flex items-center gap-3 px-4 py-2.5 text-sm text-orange-600 hover:bg-orange-50 transition">
+                                    <i class="fas fa-cog w-4"></i> Administration
+                                </a>
+                            </div>
+                            {% endif %}
+                            <div class="border-t border-gray-100 mt-1 pt-1">
+                                <form method="post" action="{% url 'users:logout' %}">
+                                    {% csrf_token %}
+                                    <button type="submit" class="flex items-center gap-3 w-full px-4 py-2.5 text-sm text-red-600 hover:bg-red-50 transition">
+                                        <i class="fas fa-sign-out-alt w-4"></i> Se déconnecter
+                                    </button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                    {% else %}
+                    <a href="{% url 'users:login' %}" class="bg-emerald-600 text-white px-4 py-2 rounded-lg text-sm font-medium hover:bg-emerald-700 transition">
+                        Connexion
+                    </a>
+                    <a href="{% url 'users:register' %}" class="hidden sm:block border border-emerald-300 text-emerald-700 px-4 py-2 rounded-lg text-sm font-medium hover:bg-emerald-50 transition">
+                        Inscription
+                    </a>
+                    {% endif %}
+                </div>
+            </div>
+
+            <!-- Menu mobile (liens principaux) -->
+            <div id="mobileMenu" class="lg:hidden hidden mt-3 pt-3 border-t border-gray-100 space-y-1">
+                <a href="{% url 'shop:catalog' %}" class="flex items-center gap-3 px-4 py-3 rounded-lg hover:bg-emerald-50 text-gray-700 transition">
+                    <i class="fas fa-store w-5 text-emerald-600"></i>
+                    <span class="font-medium">Boutique</span>
+                </a>
+                <a href="{% url 'pressing:services' %}" class="flex items-center gap-3 px-4 py-3 rounded-lg hover:bg-blue-50 text-gray-700 transition">
+                    <i class="fas fa-shirt w-5 text-blue-600"></i>
+                    <span class="font-medium">Pressing</span>
+                </a>
+                <a href="{% url 'fai:offers' %}" class="flex items-center gap-3 px-4 py-3 rounded-lg hover:bg-gray-100 text-gray-700 transition">
+                    <i class="fas fa-wifi w-5 text-gray-600"></i>
+                    <span class="font-medium">Internet</span>
+                </a>
+                <a href="{% url 'pages:about' %}" class="flex items-center gap-3 px-4 py-3 rounded-lg hover:bg-gray-50 text-gray-700 transition md:hidden">
+                    <i class="fas fa-info-circle w-5 text-gray-500"></i>
+                    <span class="font-medium">À propos</span>
+                </a>
+                <a href="{% url 'pages:contact' %}" class="flex items-center gap-3 px-4 py-3 rounded-lg hover:bg-gray-50 text-gray-700 transition md:hidden">
+                    <i class="fas fa-envelope w-5 text-gray-500"></i>
+                    <span class="font-medium">Contact</span>
+                </a>
+            </div>
+
+            <!-- Recherche mobile (cachée par défaut) -->
+            <form id="mobileSearchForm" action="{% url 'shop:catalog' %}" method="get" class="md:hidden mt-3 hidden">
+                <div class="flex border border-emerald-200 rounded-lg overflow-hidden">
+                    <input type="text" name="q" placeholder="Rechercher..." class="flex-1 px-4 py-2.5 text-sm outline-none">
+                    <button type="submit" class="bg-emerald-600 text-white px-4"><i class="fas fa-search text-sm"></i></button>
+                </div>
+            </form>
+        </div>
+
+        <!-- Barre catégories (sur boutique) -->
+        <div id="categoryBar" class="hidden border-t border-emerald-100 bg-white overflow-x-auto">
+            <div class="max-w-7xl mx-auto px-4 py-2 flex items-center gap-6 text-sm">
+                {% for cat in categories %}
+                <a href="{% url 'shop:catalog' %}?category={{ cat.slug }}" class="flex items-center gap-2 text-gray-600 hover:text-emerald-700 whitespace-nowrap transition font-medium">
+                    {% if cat.icon %}<i class="{{ cat.icon }} text-emerald-600"></i>{% endif %}
+                    {{ cat.name }}
+                </a>
+                {% endfor %}
+            </div>
+        </div>
+    </header>
+
+    <!-- ========== NOTIFICATIONS DROPDOWN ========== -->
+    <div id="notifDropdown" class="hidden fixed top-20 right-4 w-96 max-h-[500px] bg-white rounded-2xl shadow-2xl border border-gray-100 z-[60] overflow-hidden">
+        <div class="flex items-center justify-between px-5 py-3 border-b border-gray-100 bg-gray-50">
+            <h3 class="font-semibold text-gray-900">Notifications</h3>
+            <button id="markAllReadBtn" class="text-xs text-gray-500 hover:text-gray-900 transition">Tout marquer comme lu</button>
+        </div>
+        <div id="notifList" class="overflow-y-auto max-h-[420px]">
+            <div class="p-8 text-center text-gray-400">
+                <i class="fas fa-bell-slash text-3xl mb-2"></i>
+                <p class="text-sm">Aucune notification</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- ========== CONTENU PRINCIPAL ========== -->
+    <main id="mainContent" class="min-h-screen">
+        {% block content %}{% endblock %}
+    </main>
+
+    <!-- ========== FOOTER ========== -->
+    {% include 'components/footer.html' %}
+
+    <!-- ========== CHAT WIDGET ========== -->
+    {% if user.is_authenticated %}
+    {% include 'components/chat_widget.html' %}
+    {% endif %}
+
+    <!-- ========== SCRIPTS ========== -->
+    <script>
+        (function() {
+            // Initialisation du compteur du panier au chargement
+            function updateCartBadge() {
+                fetch("{% url 'shop:cart_count' %}")
+                    .then(response => response.json())
+                    .then(data => {
+                        const badge = document.getElementById('cartBadge');
+                        if (badge) {
+                            const count = data.cart_count;
+                            badge.textContent = count;
+                            if (count > 0) {
+                                badge.classList.remove('hidden');
+                            } else {
+                                badge.classList.add('hidden');
+                            }
+                        }
+                    })
+                    .catch(err => console.error('Erreur compteur panier:', err));
+            }
+            updateCartBadge();
+
+            // Gestion du menu mobile
+            const mobileMenuToggle = document.getElementById('mobileMenuToggle');
+            const mobileMenu = document.getElementById('mobileMenu');
+            if (mobileMenuToggle && mobileMenu) {
+                mobileMenuToggle.addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    mobileMenu.classList.toggle('hidden');
+                });
+            }
+
+            // Recherche mobile
+            const mobileSearchToggle = document.getElementById('mobileSearchToggle');
+            const mobileSearchForm = document.getElementById('mobileSearchForm');
+            if (mobileSearchToggle && mobileSearchForm) {
+                mobileSearchToggle.addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    mobileSearchForm.classList.toggle('hidden');
+                });
+            }
+
+            // Menu utilisateur
+            const userMenuToggle = document.getElementById('userMenuToggle');
+            const userMenu = document.getElementById('userMenu');
+            if (userMenuToggle && userMenu) {
+                userMenuToggle.addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    userMenu.classList.toggle('hidden');
+                });
+            }
+
+            // Notifications
+            const notifToggle = document.getElementById('notifToggle');
+            const notifDropdown = document.getElementById('notifDropdown');
+            if (notifToggle && notifDropdown) {
+                notifToggle.addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    notifDropdown.classList.toggle('hidden');
+                });
+            }
+
+            // Fermer les menus au clic extérieur
+            document.addEventListener('click', () => {
+                if (mobileMenu) mobileMenu.classList.add('hidden');
+                if (mobileSearchForm) mobileSearchForm.classList.add('hidden');
+                if (userMenu) userMenu.classList.add('hidden');
+                if (notifDropdown) notifDropdown.classList.add('hidden');
+            });
+
+            // Empêcher la fermeture lors du clic à l'intérieur des menus
+            [mobileMenu, mobileSearchForm, userMenu, notifDropdown].forEach(menu => {
+                if (menu) {
+                    menu.addEventListener('click', (e) => e.stopPropagation());
+                }
+            });
+        })();
+    </script>
+
+    <script src="{% static 'js/main.js' %}"></script>
+    {% block extra_js %}{% endblock %}
+</body>
+</html>

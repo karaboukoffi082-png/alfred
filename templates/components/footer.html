@@ -1,0 +1,93 @@
+<footer class="bg-gray-900 text-gray-300 mt-16">
+    <!-- Section principale -->
+    <div class="max-w-7xl mx-auto px-4 py-12 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+        <!-- Colonne 1 : Logo & info -->
+        <div>
+            <a href="{% url 'pages:home' %}" class="flex items-center gap-2 mb-4">
+                <div class="w-10 h-10 bg-white rounded-lg flex items-center justify-center">
+                    <span class="text-gray-900 font-bold text-lg" style="font-family:'Outfit',sans-serif">DK</span>
+                </div>
+                <span class="text-xl font-bold text-white" style="font-family:'Outfit',sans-serif">DK-PRESS</span>
+            </a>
+            <p class="text-sm text-gray-400 leading-relaxed mb-4">
+                Votre plateforme multi-services : produits agricoles locaux, pressing de qualite et internet haut debit FTTH a Lome, Togo.
+            </p>
+            <div class="flex items-center gap-3">
+                <a href="#" class="w-9 h-9 rounded-full bg-gray-800 hover:bg-gray-700 flex items-center justify-center transition" aria-label="Facebook">
+                    <i class="fab fa-facebook-f text-sm"></i>
+                </a>
+                <a href="#" class="w-9 h-9 rounded-full bg-gray-800 hover:bg-gray-700 flex items-center justify-center transition" aria-label="Instagram">
+                    <i class="fab fa-instagram text-sm"></i>
+                </a>
+                <a href="#" class="w-9 h-9 rounded-full bg-gray-800 hover:bg-gray-700 flex items-center justify-center transition" aria-label="TikTok">
+                    <i class="fab fa-tiktok text-sm"></i>
+                </a>
+                <a href="https://wa.me/22890899814" class="w-9 h-9 rounded-full bg-gray-800 hover:bg-green-700 flex items-center justify-center transition" aria-label="WhatsApp">
+                    <i class="fab fa-whatsapp text-sm"></i>
+                </a>
+            </div>
+        </div>
+
+        <!-- Colonne 2 : Services -->
+        <div>
+            <h4 class="text-white font-semibold mb-4 text-sm uppercase tracking-wider">Services</h4>
+            <ul class="space-y-2.5">
+                <li><a href="{% url 'shop:catalog' %}" class="text-sm text-gray-400 hover:text-white transition flex items-center gap-2"><i class="fas fa-leaf text-green-500 text-xs"></i> Boutique agricole</a></li>
+                <li><a href="{% url 'pressing:services' %}" class="text-sm text-gray-400 hover:text-white transition flex items-center gap-2"><i class="fas fa-shirt text-blue-400 text-xs"></i> Pressing en ligne</a></li>
+                <li><a href="{% url 'fai:offers' %}" class="text-sm text-gray-400 hover:text-white transition flex items-center gap-2"><i class="fas fa-wifi text-gray-400 text-xs"></i> Internet FTTH</a></li>
+                <li><a href="{% url 'chat:inbox' %}" class="text-sm text-gray-400 hover:text-white transition flex items-center gap-2"><i class="fas fa-comments text-yellow-500 text-xs"></i> Support chat</a></li>
+            </ul>
+        </div>
+
+        <!-- Colonne 3 : Liens utiles -->
+        <div>
+            <h4 class="text-white font-semibold mb-4 text-sm uppercase tracking-wider">Liens utiles</h4>
+            <ul class="space-y-2.5">
+                <li><a href="{% url 'pages:about' %}" class="text-sm text-gray-400 hover:text-white transition">A propos</a></li>
+                <li><a href="{% url 'pages:contact' %}" class="text-sm text-gray-400 hover:text-white transition">Contact</a></li>
+                <li><a href="{% url 'pages:faq' %}" class="text-sm text-gray-400 hover:text-white transition">FAQ</a></li>
+                <li><a href="{% url 'pages:legal' %}" class="text-sm text-gray-400 hover:text-white transition">Conditions generales</a></li>
+                <li><a href="{% url 'pages:legal' %}" class="text-sm text-gray-400 hover:text-white transition">Politique de confidentialite</a></li>
+            </ul>
+        </div>
+
+        <!-- Colonne 4 : Contact -->
+        <div>
+            <h4 class="text-white font-semibold mb-4 text-sm uppercase tracking-wider">Contact</h4>
+            <ul class="space-y-3">
+                <li class="flex items-start gap-3">
+                    <i class="fas fa-map-marker-alt text-gray-500 mt-1"></i>
+                    <span class="text-sm text-gray-400">Lome, Togo</span>
+                </li>
+                <li class="flex items-center gap-3">
+                    <i class="fas fa-phone-alt text-gray-500"></i>
+                    <a href="tel:+22879017384" class="text-sm text-gray-400 hover:text-white transition">79 01 73 84</a>
+                </li>
+                <li class="flex items-center gap-3">
+                    <i class="fab fa-whatsapp text-gray-500"></i>
+                    <a href="https://wa.me/22890899814" class="text-sm text-gray-400 hover:text-white transition">90 89 98 14</a>
+                </li>
+                <li class="flex items-center gap-3">
+                    <i class="fas fa-envelope text-gray-500"></i>
+                    <a href="mailto:divakoboyo@gmail.com" class="text-sm text-gray-400 hover:text-white transition">divakoboyo@gmail.com</a>
+                </li>
+            </ul>
+        </div>
+    </div>
+
+    <!-- Barre de paiement -->
+    <div class="border-t border-gray-800">
+        <div class="max-w-7xl mx-auto px-4 py-4 flex flex-col sm:flex-row items-center justify-between gap-3">
+            <p class="text-xs text-gray-500">&copy; 2026 DK-PRESS. Tous droits reserves.</p>
+            <div class="flex items-center gap-3">
+                <span class="text-xs text-gray-500">Paiements :</span>
+                <div class="flex items-center gap-2">
+                    <span class="bg-gray-800 text-gray-400 text-xs px-2 py-1 rounded font-medium">T-Money</span>
+                    <span class="bg-gray-800 text-gray-400 text-xs px-2 py-1 rounded font-medium">Flooz</span>
+                    <span class="bg-gray-800 text-gray-400 text-xs px-2 py-1 rounded font-medium">Stripe</span>
+                    <span class="bg-gray-800 text-gray-400 text-xs px-2 py-1 rounded font-medium">PayPal</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</footer>

@@ -1,0 +1,55 @@
+{% extends 'base.html' %}
+{% load humanize %}
+{% block title %}Achat Internet{% endblock %}
+
+{% block content %}
+<div class="max-w-3xl mx-auto px-4 py-8">
+    <nav class="text-sm text-gray-400 mb-6">
+        <a href="{% url 'fai:offers' %}" class="hover:text-gray-600 transition">Offres</a>
+        <i class="fas fa-chevron-right text-[10px] mx-2"></i>
+        <span class="text-gray-900 font-medium">Achat</span>
+    </nav>
+
+    <h1 class="text-2xl font-bold text-gray-900 mb-8" style="font-family:'Outfit',sans-serif">
+        <i class="fas fa-wifi text-gray-600 mr-2"></i>Souscrire une offre
+    </h1>
+
+    <form method="post" action="{% url 'fai:process_purchase' %}" class="bg-white rounded-2xl border border-gray-100 p-6 space-y-5">
+        {% csrf_token %}
+        {% if messages %}
+        <div class="space-y-2">
+            {% for message in messages %}
+            <div class="px-4 py-3 rounded-xl text-sm {% if message.tags == 'error' %}bg-red-50 text-red-700{% else %}bg-green-50 text-green-700{% endif %}">{{ message }}</div>
+            {% endfor %}
+        </div>
+        {% endif %}
+
+        <!-- Offre -->
+        <div>
+            <label class="block text-sm font-medium text-gray-700 mb-1.5">Offre *</label>
+            <select name="offer" required class="w-full border border-gray-200 rounded-xl px-4 py-3 text-sm outline-none focus:ring-2 focus:ring-gray-900 focus:border-transparent transition bg-white">
+                <option value="">Choisir une offre</option>
+                {% for o in offers %}
+                <option value="{{ o.id }}">{{ o.name }} — {{ o.speed_mbps }}Mbps — {{ o.price|intcomma }} FCFA/{{ o.validity_days }}j</option>
+                {% endfor %}
+            </select>
+        </div>
+
+        <!-- Foyer (FTTH uniquement) -->
+        <div id="foyerField">
+            <label class="block text-sm font-medium text-gray-700 mb-1.5">Foyer (pour FTTH)</label>
+            <select name="foyer" class="w-full border border-gray-200 rounded-xl px-4 py-3 text-sm outline-none focus:ring-2 focus:ring-gray-900 focus:border-transparent transition bg-white">
+                <option value="">Aucun (ticket / WiFi)</option>
+                {% for f in foyers %}
+                <option value="{{ f.id }}">{{ f.name }} — {{ f.quartier }}, {{ f.city }}</option>
+                {% endfor %}
+            </select>
+            <p class="text-xs text-gray-400 mt-1">Sélectionnez un foyer uniquement pour les abonnements FTTH.</p>
+        </div>
+
+        <button type="submit" class="w-full bg-gray-900 text-white py-3 rounded-xl font-semibold hover:bg-gray-800 active:scale-[0.98] transition-all">
+            <i class="fas fa-arrow-right mr-1.5"></i> Continuer vers le paiement
+        </button>
+    </form>
+</div>
+{% endblock %}

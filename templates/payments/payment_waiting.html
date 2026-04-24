@@ -1,0 +1,64 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Paiement en attente{% endblock %}
+
+{% block extra_css %}
+<style>
+    .pulse-ring {
+        animation: pulseRing 1.5s ease-out infinite;
+    }
+    @keyframes pulseRing {
+        0% { transform: scale(0.8); opacity: 1; }
+        100% { transform: scale(2); opacity: 0; }
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="max-w-lg mx-auto px-4 py-16 text-center">
+    <div class="relative inline-block mb-6">
+        <div class="w-20 h-20 bg-amber-100 rounded-full flex items-center justify-center">
+            <i class="fas fa-spinner fa-spin text-3xl text-amber-600"></i>
+        </div>
+        <div class="absolute inset-0 w-20 h-20 bg-amber-200 rounded-full pulse-ring"></div>
+    </div>
+
+    <h1 class="text-2xl font-bold text-gray-900 mb-3" style="font-family:'Outfit',sans-serif">Paiement en cours...</h1>
+    <p class="text-gray-500 mb-8">Veuillez patienter pendant que nous vérifions votre paiement. Ne fermez pas cette page.</p>
+
+    <div class="bg-white rounded-2xl border border-gray-100 p-6 text-left mb-8">
+        <div class="flex items-center gap-3 text-sm text-gray-600">
+            <i class="fas fa-info-circle text-blue-500"></i>
+            <span>Si vous avez déjà validé le paiement sur votre téléphone, la confirmation arrivera d'ici quelques secondes.</span>
+        </div>
+    </div>
+
+    <p class="text-sm text-gray-400">
+        <i class="far fa-clock mr-1"></i> Vérification automatique en cours...
+    </p>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+// Polling automatique du statut du paiement
+(function() {
+    const poll = setInterval(() => {
+        fetch('{% url "payments:check" %}')
+            .then(r => r.json())
+            .then(data => {
+                if (data.status === 'success') {
+                    clearInterval(poll);
+                    window.location.href = '{% url "payments:success" %}';
+                } else if (data.status === 'failed') {
+                    clearInterval(poll);
+                    window.location.href = '{% url "payments:failure" %}';
+                }
+                // Sinon, on continue (pending, processing)
+            })
+            .catch(err => console.error('Polling error:', err));
+    }, 3000);
+})();
+</script>
+{% endblock %}

@@ -1,0 +1,183 @@
+{% extends 'base.html' %}
+
+{% block title %}FAQ{% endblock %}
+
+{% block content %}
+<section class="bg-gray-900 relative overflow-hidden">
+    <div class="max-w-4xl mx-auto px-4 py-20 text-center relative z-10">
+        <span class="text-sm font-semibold text-green-400 uppercase tracking-wider">Aide</span>
+        <h1 class="text-4xl md:text-5xl font-extrabold text-white mt-3" style="font-family:'Outfit',sans-serif">Questions fréquentes</h1>
+        <p class="text-gray-400 mt-4 text-lg">Trouvez rapidement les réponses à vos questions.</p>
+    </div>
+</section>
+
+<section class="py-16 bg-white">
+    <div class="max-w-3xl mx-auto px-4">
+        <!-- Catégories FAQ -->
+        <div class="flex flex-wrap gap-2 mb-8 justify-center">
+            <button class="faq-filter-btn active px-4 py-2 rounded-full text-sm font-medium bg-gray-900 text-white transition" data-filter="all">Tout</button>
+            <button class="faq-filter-btn px-4 py-2 rounded-full text-sm font-medium bg-gray-100 text-gray-600 hover:bg-gray-200 transition" data-filter="boutique">
+                <i class="fas fa-leaf mr-1 text-green-600"></i> Boutique
+            </button>
+            <button class="faq-filter-btn px-4 py-2 rounded-full text-sm font-medium bg-gray-100 text-gray-600 hover:bg-gray-200 transition" data-filter="pressing">
+                <i class="fas fa-shirt mr-1 text-blue-600"></i> Pressing
+            </button>
+            <button class="faq-filter-btn px-4 py-2 rounded-full text-sm font-medium bg-gray-100 text-gray-600 hover:bg-gray-200 transition" data-filter="internet">
+                <i class="fas fa-wifi mr-1 text-gray-600"></i> Internet
+            </button>
+            <button class="faq-filter-btn px-4 py-2 rounded-full text-sm font-medium bg-gray-100 text-gray-600 hover:bg-gray-200 transition" data-filter="paiement">
+                <i class="fas fa-credit-card mr-1 text-amber-600"></i> Paiement
+            </button>
+        </div>
+
+        <!-- Items FAQ -->
+        <div class="space-y-3" id="faqContainer">
+            <!-- Boutique -->
+            <div class="faq-item bg-white rounded-xl border border-gray-100 overflow-hidden" data-category="boutique">
+                <button class="faq-toggle w-full flex items-center justify-between px-6 py-4 text-left">
+                    <span class="text-sm font-semibold text-gray-900 pr-4">Comment commander des produits sur DK-PRESS ?</span>
+                    <i class="fas fa-chevron-down text-gray-400 text-xs transition-transform duration-300 faq-icon"></i>
+                </button>
+                <div class="faq-content hidden px-6 pb-4">
+                    <p class="text-sm text-gray-600 leading-relaxed">Parcourez notre catalogue, ajoutez les produits au panier, choisissez votre adresse de livraison et payez via Mobile Money (T-Money ou Flooz). Vous recevrez une confirmation par notification et email.</p>
+                </div>
+            </div>
+
+            <div class="faq-item bg-white rounded-xl border border-gray-100 overflow-hidden" data-category="boutique">
+                <button class="faq-toggle w-full flex items-center justify-between px-6 py-4 text-left">
+                    <span class="text-sm font-semibold text-gray-900 pr-4">Les produits sont-ils livrés à domicile ?</span>
+                    <i class="fas fa-chevron-down text-gray-400 text-xs transition-transform duration-300 faq-icon"></i>
+                </button>
+                <div class="faq-content hidden px-6 pb-4">
+                    <p class="text-sm text-gray-600 leading-relaxed">Oui, nous livrons à domicile dans toute la zone de Lomé. Vous pouvez suivre votre commande en temps réel depuis votre tableau de bord. Les frais de livraison sont de 500 FCFA par commande.</p>
+                </div>
+            </div>
+
+            <div class="faq-item bg-white rounded-xl border border-gray-100 overflow-hidden" data-category="boutique">
+                <button class="faq-toggle w-full flex items-center justify-between px-6 py-4 text-left">
+                    <span class="text-sm font-semibold text-gray-900 pr-4">D'où viennent les produits agricoles ?</span>
+                    <i class="fas fa-chevron-down text-gray-400 text-xs transition-transform duration-300 faq-icon"></i>
+                </button>
+                <div class="faq-content hidden px-6 pb-4">
+                    <p class="text-sm text-gray-600 leading-relaxed">Nous travaillons directement avec des producteurs locaux togolais. Les produits frais sont sélectionnés chaque matin pour garantir la qualité et la fraîcheur.</p>
+                </div>
+            </div>
+
+            <!-- Pressing -->
+            <div class="faq-item bg-white rounded-xl border border-gray-100 overflow-hidden" data-category="pressing">
+                <button class="faq-toggle w-full flex items-center justify-between px-6 py-4 text-left">
+                    <span class="text-sm font-semibold text-gray-900 pr-4">Comment fonctionne le service pressing en ligne ?</span>
+                    <i class="fas fa-chevron-down text-gray-400 text-xs transition-transform duration-300 faq-icon"></i>
+                </button>
+                <div class="faq-content hidden px-6 pb-4">
+                    <p class="text-sm text-gray-600 leading-relaxed">Choisissez le service souhaité (lavage, repassage, nettoyage à sec), décrivez vos vêtements, planifiez un créneau de prise en charge. Nous récupérons vos vêtements et vous les livrons propres.</p>
+                </div>
+            </div>
+
+            <div class="faq-item bg-white rounded-xl border border-gray-100 overflow-hidden" data-category="pressing">
+                <button class="faq-toggle w-full flex items-center justify-between px-6 py-4 text-left">
+                    <span class="text-sm font-semibold text-gray-900 pr-4">Combien de temps prend le pressing ?</span>
+                    <i class="fas fa-chevron-down text-gray-400 text-xs transition-transform duration-300 faq-icon"></i>
+                </button>
+                <div class="faq-content hidden px-6 pb-4">
+                    <p class="text-sm text-gray-600 leading-relaxed">Le délai dépend du service choisi : lavage simple 24-48h, repassage 24h, nettoyage à sec 48-72h. Vous pouvez suivre l'avancement en temps réel depuis votre espace client.</p>
+                </div>
+            </div>
+
+            <!-- Internet -->
+            <div class="faq-item bg-white rounded-xl border border-gray-100 overflow-hidden" data-category="internet">
+                <button class="faq-toggle w-full flex items-center justify-between px-6 py-4 text-left">
+                    <span class="text-sm font-semibold text-gray-900 pr-4">Quelle est la différence entre FTTH et ticket data ?</span>
+                    <i class="fas fa-chevron-down text-gray-400 text-xs transition-transform duration-300 faq-icon"></i>
+                </button>
+                <div class="faq-content hidden px-6 pb-4">
+                    <p class="text-sm text-gray-600 leading-relaxed">Le FTTH (Fiber To The Home) est une connexion fibre optique installée chez vous avec un débit constant et illimité. Le ticket data est un forfait temporaire (WiFi) sans installation, idéal pour une connexion ponctuelle.</p>
+                </div>
+            </div>
+
+            <div class="faq-item bg-white rounded-xl border border-gray-100 overflow-hidden" data-category="internet">
+                <button class="faq-toggle w-full flex items-center justify-between px-6 py-4 text-left">
+                    <span class="text-sm font-semibold text-gray-900 pr-4">Comment se passe l'installation FTTH ?</span>
+                    <i class="fas fa-chevron-down text-gray-400 text-xs transition-transform duration-300 faq-icon"></i>
+                </button>
+                <div class="faq-content hidden px-6 pb-4">
+                    <p class="text-sm text-gray-600 leading-relaxed">Après souscription, notre équipe technique planifie une visite pour installer l'équipement ONU chez vous. L'activation est automatique après confirmation du paiement. Le délai d'installation est de 24 à 72h.</p>
+                </div>
+            </div>
+
+            <!-- Paiement -->
+            <div class="faq-item bg-white rounded-xl border border-gray-100 overflow-hidden" data-category="paiement">
+                <button class="faq-toggle w-full flex items-center justify-between px-6 py-4 text-left">
+                    <span class="text-sm font-semibold text-gray-900 pr-4">Quels moyens de paiement acceptez-vous ?</span>
+                    <i class="fas fa-chevron-down text-gray-400 text-xs transition-transform duration-300 faq-icon"></i>
+                </button>
+                <div class="faq-content hidden px-6 pb-4">
+                    <p class="text-sm text-gray-600 leading-relaxed">Nous acceptons T-Money, Flooz (Mobile Money), Stripe et PayPal. Le paiement Mobile Money est le plus utilisé au Togo et le plus rapide sur notre plateforme.</p>
+                </div>
+            </div>
+
+            <div class="faq-item bg-white rounded-xl border border-gray-100 overflow-hidden" data-category="paiement">
+                <button class="faq-toggle w-full flex items-center justify-between px-6 py-4 text-left">
+                    <span class="text-sm font-semibold text-gray-900 pr-4">Mon paiement a échoué, que faire ?</span>
+                    <i class="fas fa-chevron-down text-gray-400 text-xs transition-transform duration-300 faq-icon"></i>
+                </button>
+                <div class="faq-content hidden px-6 pb-4">
+                    <p class="text-sm text-gray-600 leading-relaxed">Vérifiez que vous avez suffisamment de solde sur votre compte Mobile Money. Si le problème persiste, contactez notre support via le chat ou au 79 01 73 84. Aucun débit n'est effectué en cas d'échec.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- CTA -->
+        <div class="mt-12 bg-gray-50 rounded-2xl p-8 text-center">
+            <p class="text-gray-700 font-medium">Vous n'avez pas trouvé la réponse ?</p>
+            <p class="text-sm text-gray-500 mt-1">Notre support est disponible pour vous aider.</p>
+            <div class="mt-4 flex flex-wrap justify-center gap-3">
+                <a href="{% url 'chat:inbox' %}" class="inline-flex items-center gap-2 bg-gray-900 text-white px-6 py-2.5 rounded-xl text-sm font-semibold hover:bg-gray-800 transition">
+                    <i class="fas fa-comment-dots"></i> Démarrer un chat
+                </a>
+                <a href="https://wa.me/22890899814" class="inline-flex items-center gap-2 bg-green-600 text-white px-6 py-2.5 rounded-xl text-sm font-semibold hover:bg-green-700 transition">
+                    <i class="fab fa-whatsapp"></i> WhatsApp
+                </a>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+document.querySelectorAll('.faq-toggle').forEach(btn => {
+    btn.addEventListener('click', () => {
+        const item = btn.closest('.faq-item');
+        const content = item.querySelector('.faq-content');
+        const icon = item.querySelector('.faq-icon');
+
+        // Fermer les autres
+        document.querySelectorAll('.faq-item').forEach(other => {
+            if (other !== item) {
+                other.querySelector('.faq-content').classList.add('hidden');
+                other.querySelector('.faq-icon').style.transform = '';
+            }
+        });
+
+        content.classList.toggle('hidden');
+        icon.style.transform = content.classList.contains('hidden') ? '' : 'rotate(180deg)';
+    });
+});
+
+// Filtre catégorie
+document.querySelectorAll('.faq-filter-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+        document.querySelectorAll('.faq-filter-btn').forEach(b => {
+            b.className = 'faq-filter-btn px-4 py-2 rounded-full text-sm font-medium bg-gray-100 text-gray-600 hover:bg-gray-200 transition';
+        });
+        btn.className = 'faq-filter-btn active px-4 py-2 rounded-full text-sm font-medium bg-gray-900 text-white transition';
+
+        const filter = btn.dataset.filter;
+        document.querySelectorAll('.faq-item').forEach(item => {
+            item.style.display = (filter === 'all' || item.dataset.category === filter) ? '' : 'none';
+        });
+    });
+});
+</script>
+{% endblock %}

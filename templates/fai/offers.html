@@ -1,0 +1,94 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load humanize %}
+{% block title %}Offres Internet{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/fai.css' %}">
+{% endblock %}
+
+{% block content %}
+<section class="bg-gray-900 relative overflow-hidden">
+    <div class="absolute inset-0 opacity-10">
+        <div class="absolute bottom-0 right-0 w-96 h-96 bg-white rounded-full blur-[128px]"></div>
+    </div>
+    <div class="max-w-4xl mx-auto px-4 py-20 text-center relative z-10">
+        <span class="text-sm font-semibold text-gray-400 uppercase tracking-wider">Internet</span>
+        <h1 class="text-4xl md:text-5xl font-extrabold text-white mt-3" style="font-family:'Outfit',sans-serif">Offres Internet Haut Débit</h1>
+        <p class="text-gray-400 mt-4 text-lg max-w-xl mx-auto">Fibre optique FTTH et tickets data. Connectez-vous avec DK-PRESS.</p>
+    </div>
+</section>
+
+<!-- Filtres type -->
+<section class="bg-white border-b border-gray-100 sticky top-16 z-30">
+    <div class="max-w-5xl mx-auto px-4 py-3 flex items-center gap-3 overflow-x-auto">
+        <button class="offer-filter active px-5 py-2 rounded-full text-sm font-medium bg-gray-900 text-white transition whitespace-nowrap" data-type="all">Toutes</button>
+        <button class="offer-filter px-5 py-2 rounded-full text-sm font-medium bg-gray-100 text-gray-600 hover:bg-gray-200 transition whitespace-nowrap" data-type="ftth">
+            <i class="fas fa-network-wired mr-1"></i> FTTH Fibre
+        </button>
+        <button class="offer-filter px-5 py-2 rounded-full text-sm font-medium bg-gray-100 text-gray-600 hover:bg-gray-200 transition whitespace-nowrap" data-type="wifi">
+            <i class="fas fa-wifi mr-1"></i> WiFi
+        </button>
+        <button class="offer-filter px-5 py-2 rounded-full text-sm font-medium bg-gray-100 text-gray-600 hover:bg-gray-200 transition whitespace-nowrap" data-type="ticket">
+            <i class="fas fa-ticket-alt mr-1"></i> Ticket Data
+        </button>
+    </div>
+</section>
+
+<section class="py-16 bg-gray-50">
+    <div class="max-w-6xl mx-auto px-4">
+        {% if offers %}
+        <div class="grid md:grid-cols-3 gap-6" id="offersGrid">
+            {% for offer in offers %}
+            <div class="offer-card bg-white rounded-2xl border-2 {% if offer.is_popular %}border-gray-900 shadow-xl scale-[1.02]{% else %}border-gray-100{% endif %} p-6 hover:shadow-lg transition-all duration-300 flex flex-col" data-type="{{ offer.offer_type }}">
+                {% if offer.is_popular %}
+                <span class="absolute -top-3 left-1/2 -translate-x-1/2 bg-gray-900 text-white text-xs font-bold px-4 py-1 rounded-full">Populaire</span>
+                {% endif %}
+                <div class="text-center flex-1">
+                    <span class="text-xs font-semibold text-gray-400 uppercase tracking-wider">{{ offer.get_offer_type_display }}</span>
+                    <p class="text-5xl font-extrabold text-gray-900 mt-3" style="font-family:'Outfit',sans-serif">{{ offer.speed_mbps }}</p>
+                    <p class="text-sm text-gray-500 mt-1">Mbps</p>
+                    <p class="text-sm text-gray-600 font-medium mt-1">{{ offer.data_label }}</p>
+                    {% if offer.description %}
+                    <p class="text-xs text-gray-400 mt-2">{{ offer.description }}</p>
+                    {% endif %}
+                    <div class="my-6 border-t border-gray-100 pt-5">
+                        <span class="text-4xl font-bold text-gray-900" style="font-family:'Outfit',sans-serif">{{ offer.price|intcomma }}</span>
+                        <span class="text-sm text-gray-400"> FCFA</span>
+                        <span class="text-xs text-gray-400 block mt-1">/ {{ offer.validity_days }} jours</span>
+                    </div>
+                </div>
+                <a href="{% url 'fai:buy_ticket' %}?type={{ offer.offer_type }}" class="block py-3 rounded-xl font-semibold text-sm text-center transition
+                    {% if offer.is_popular %}bg-gray-900 text-white hover:bg-gray-800{% else %}border-2 border-gray-200 text-gray-700 hover:bg-gray-50{% endif %}">
+                    Souscrire maintenant
+                </a>
+            </div>
+            {% endfor %}
+        </div>
+        {% else %}
+        <div class="text-center py-16 text-gray-400">
+            <i class="fas fa-wifi text-5xl mb-3"></i>
+            <p class="text-lg">Aucune offre disponible.</p>
+        </div>
+        {% endif %}
+    </div>
+</section>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+document.querySelectorAll('.offer-filter').forEach(btn => {
+    btn.addEventListener('click', () => {
+        document.querySelectorAll('.offer-filter').forEach(b => {
+            b.className = 'offer-filter px-5 py-2 rounded-full text-sm font-medium bg-gray-100 text-gray-600 hover:bg-gray-200 transition whitespace-nowrap';
+        });
+        btn.className = 'offer-filter active px-5 py-2 rounded-full text-sm font-medium bg-gray-900 text-white transition whitespace-nowrap';
+
+        const type = btn.dataset.type;
+        document.querySelectorAll('.offer-card').forEach(card => {
+            card.style.display = (type === 'all' || card.dataset.type === type) ? '' : 'none';
+        });
+    });
+});
+</script>
+{% endblock %}

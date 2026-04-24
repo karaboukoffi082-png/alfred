@@ -1,0 +1,139 @@
+{% extends 'base.html' %}
+{% load humanize %}
+{% block title %}Planifier un pressing{% endblock %}
+{% block extra_css %}{% endblock %}
+{% block content %}
+<div class="max-w-4xl mx-auto px-4 py-8">
+    <nav class="text-sm text-gray-400 mb-6">
+        <a href="{% url 'pressing:services' %}" class="hover:text-gray-600 transition">Services</a>
+        <i class="fas fa-chevron-right text-[10px] mx-2"></i>
+        <span class="text-gray-900 font-medium">Prise de rendez-vous</span>
+    </nav>
+
+    <h1 class="text-2xl font-bold text-gray-900 mb-8" style="font-family:'Outfit',sans-serif">
+        <i class="fas fa-calendar-plus text-blue-600 mr-2"></i>Planifier votre pressing
+    </h1>
+
+    {% if messages %}
+    <div class="space-y-2 mb-5">
+        {% for message in messages %}
+        <div class="px-4 py-3 rounded-xl text-sm {% if message.tags == 'error' %}bg-red-50 text-red-700{% else %}bg-green-50 text-green-700{% endif %}">{{ message }}</div>
+        {% endfor %}
+    </div>
+    {% endif %}
+
+    <div class="grid lg:grid-cols-5 gap-8">
+        <div class="lg:col-span-3">
+            <form method="post" action="{% url 'pressing:create_order' %}" class="bg-white rounded-2xl border border-gray-100 p-6 space-y-5">
+                {% csrf_token %}
+
+                <!-- Service -->
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1.5">Service *</label>
+                    <select name="service" required class="w-full border border-gray-200 rounded-xl px-4 py-3 text-sm outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition bg-white">
+                        <option value="">Choisir un service</option>
+                        {% for s in services %}
+                        <option value="{{ s.id }}" {% if request.GET.service|stringformat:"s" == s.id|stringformat:"s" %}selected{% endif %}>
+                            {{ s.name }} — {{ s.base_price|intcomma }} FCFA
+                        </option>
+                        {% endfor %}
+                    </select>
+                </div>
+
+                <!-- Description vêtement -->
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1.5">Description du vêtement *</label>
+                    <input type="text" name="garment_description" required placeholder="Ex: Chemise blanche, Costume gris..."
+                           class="w-full border border-gray-200 rounded-xl px-4 py-3 text-sm outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition">
+                </div>
+
+                <div class="grid grid-cols-2 gap-4">
+                    <!-- Quantité -->
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1.5">Quantité *</label>
+                        <input type="number" name="quantity" value="1" min="1" required
+                               class="w-full border border-gray-200 rounded-xl px-4 py-3 text-sm outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition">
+                    </div>
+                    <!-- Poids -->
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1.5">Poids (kg)</label>
+                        <input type="number" name="weight" step="0.1" min="0" placeholder="Optionnel"
+                               class="w-full border border-gray-200 rounded-xl px-4 py-3 text-sm outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition">
+                    </div>
+                </div>
+
+                <!-- Date souhaitée -->
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1.5">Date de prise en charge souhaitée</label>
+                    <input type="datetime-local" name="scheduled_date"
+                           class="w-full border border-gray-200 rounded-xl px-4 py-3 text-sm outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition">
+                </div>
+
+                <!-- Adresses -->
+                <div class="grid grid-cols-2 gap-4">
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1.5">Adresse d'enlèvement</label>
+                        <select name="pickup_address" class="w-full border border-gray-200 rounded-xl px-4 py-3 text-sm outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition bg-white">
+                            <option value="">Sur place</option>
+                            {% for addr in addresses %}
+                            <option value="{{ addr.id }}">{{ addr.street }}, {{ addr.city }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1.5">Adresse de livraison</label>
+                        <select name="delivery_address" class="w-full border border-gray-200 rounded-xl px-4 py-3 text-sm outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition bg-white">
+                            <option value="">Même adresse</option>
+                            {% for addr in addresses %}
+                            <option value="{{ addr.id }}">{{ addr.street }}, {{ addr.city }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                </div>
+
+                <!-- Note -->
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1.5">Note</label>
+                    <textarea name="note" rows="3" placeholder="Taches particulières, instructions..."
+                              class="w-full border border-gray-200 rounded-xl px-4 py-3 text-sm outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition resize-none"></textarea>
+                </div>
+
+                <button type="submit" class="w-full bg-blue-600 text-white py-3 rounded-xl font-semibold hover:bg-blue-700 active:scale-[0.98] transition-all">
+                    <i class="fas fa-check mr-1.5"></i> Confirmer la commande
+                </button>
+            </form>
+        </div>
+
+        <!-- Info latérale -->
+        <div class="lg:col-span-2 space-y-4">
+            <div class="bg-blue-50 rounded-xl p-5">
+                <h3 class="font-bold text-blue-900 mb-3"><i class="fas fa-info-circle mr-1"></i> Comment ça marche ?</h3>
+                <ol class="space-y-3 text-sm text-blue-800">
+                    <li class="flex items-start gap-3">
+                        <span class="w-6 h-6 bg-blue-600 text-white rounded-full flex items-center justify-center text-xs font-bold flex-shrink-0">1</span>
+                        <span>Choisissez le service et décrivez vos vêtements</span>
+                    </li>
+                    <li class="flex items-start gap-3">
+                        <span class="w-6 h-6 bg-blue-600 text-white rounded-full flex items-center justify-center text-xs font-bold flex-shrink-0">2</span>
+                        <span>Planifiez un créneau de prise en charge</span>
+                    </li>
+                    <li class="flex items-start gap-3">
+                        <span class="w-6 h-6 bg-blue-600 text-white rounded-full flex items-center justify-center text-xs font-bold flex-shrink-0">3</span>
+                        <span>Payez via Mobile Money</span>
+                    </li>
+                    <li class="flex items-start gap-3">
+                        <span class="w-6 h-6 bg-blue-600 text-white rounded-full flex items-center justify-center text-xs font-bold flex-shrink-0">4</span>
+                        <span>Suivez l'avancement en temps réel</span>
+                    </li>
+                </ol>
+            </div>
+            <div class="bg-white rounded-xl border border-gray-100 p-5">
+                <h3 class="font-bold text-gray-900 mb-3">Besoin d'aide ?</h3>
+                <a href="{% url 'chat:start' 'support' %}" class="flex items-center gap-2 text-sm text-blue-600 hover:text-blue-700 transition">
+                    <i class="fas fa-comment-dots"></i> Contacter le support
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
